@@ -1,26 +1,43 @@
-// src/components/Navbar.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect for navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
   const navItems = [
-    { name: 'Dashboard', href: '/dashboard' },
-    { name: 'X Feed', href: '/x-feed' },
-    { name: 'Ethical Leaderboard', href: '/ethical-leaderboard' },
+    { name: 'Players', href: '/players' },
     { name: 'Predictions', href: '/predictions' },
+    { name: 'X Feed', href: '/x-feed'},
+    { name: 'Twitter Feed', href: '/x-feed' },
+    { name: 'Ethical Leaderboard', href: '/ethical-leaderboard' }
   ];
 
   return (
-    <nav className="bg-white text-black border-b border-black sm:border-b sm:border-black">
+    <nav className={`sticky top-0 z-50 bg-white text-black transition-all duration-300 ${
+      scrolled ? 'shadow-md' : ''
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Mobile menu button */}
@@ -41,7 +58,7 @@ const Navbar = () => {
 
           {/* Logo/Brand */}
           <div className="flex items-center justify-center flex-1 sm:justify-start">
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 text-[#1A365D]">
               <Link href="/" className="text-xl font-bold">
                 NBAAAI
               </Link>
