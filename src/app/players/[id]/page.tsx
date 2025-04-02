@@ -44,7 +44,7 @@ export default async function PlayerDetailPage({
   params: Params;
 }) {
   // Destructure id directly from params
-  const { id } = await params;
+  const id = (await params).id;
 
   if (!id) {
     throw new Error("Player ID not provided");
