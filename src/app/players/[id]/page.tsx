@@ -36,10 +36,14 @@ async function fetchPlayerDetails(playerId: string) {
   }
 }
 
+interface PlayerParams {
+    id: string;
+  }
+
 export default async function PlayerDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: PlayerParams;
 }) {
   // Destructure id directly from params
   const { id } = params;
