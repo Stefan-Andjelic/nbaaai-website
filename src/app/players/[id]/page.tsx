@@ -36,13 +36,9 @@ async function fetchPlayerDetails(playerId: string) {
   }
 }
 
-type Params = Promise<{ id: string }>
-
-export default async function PlayerDetailPage({
-  params,
-}: {
-  params: Params;
-}) {
+export default async function PlayerDetailPage(
+  { params }: { params: Promise<{ id: string }> }
+) {
   // Destructure id directly from params
   const id = (await params).id;
 
