@@ -36,11 +36,14 @@ async function fetchPlayerDetails(playerId: string) {
   }
 }
 
-export default async function PlayerDetailPage(
-  { params }: { params: Promise<{ id: string }> }
-) {
-  // Destructure id directly from params
-  const id = (await params).id;
+// type PlayerDetailParams = 
+
+export default async function PlayerDetailPage({ 
+    params 
+}: { 
+    params: Promise<{ id: string }>
+}) {
+  const { id } = await params;
 
   if (!id) {
     throw new Error("Player ID not provided");
