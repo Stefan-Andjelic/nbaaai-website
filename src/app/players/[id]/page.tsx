@@ -36,14 +36,14 @@ async function fetchPlayerDetails(playerId: string) {
   }
 }
 
-// type PlayerDetailParams = 
+// type PlayerDetailParams =
 
-export default async function PlayerDetailPage({ 
-    params 
-}: { 
-    params: Promise<{ id: string }>
+export default async function PlayerDetailPage({
+  params,
+}: {
+  params: { id: string };
 }) {
-  const id = (await params).id;
+  const { id } = params;
 
   if (!id) {
     throw new Error("Player ID not provided");
@@ -118,13 +118,19 @@ export default async function PlayerDetailPage({
                       <TableCell>{stat.season_year}</TableCell>
                       <TableCell>{stat.team_id}</TableCell>
                       <TableCell>
-                        {stat.points != null ? (stat.points / stat.games).toFixed(1) : "N/A"}
+                        {stat.points != null
+                          ? (stat.points / stat.games).toFixed(1)
+                          : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.total_rebounds != null ? (stat.total_rebounds / stat.games).toFixed(1) : "N/A"}
+                        {stat.total_rebounds != null
+                          ? (stat.total_rebounds / stat.games).toFixed(1)
+                          : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.assists != null ? (stat.assists / stat.games).toFixed(1) : "N/A"}
+                        {stat.assists != null
+                          ? (stat.assists / stat.games).toFixed(1)
+                          : "N/A"}
                       </TableCell>
                       <TableCell>{stat.games}</TableCell>
                     </TableRow>
