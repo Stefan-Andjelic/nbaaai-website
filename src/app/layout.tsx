@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "NBAAAI - Stats and Predictions",
   description: "Best insights and predictions for the NBA",
   icons: {
-    icon: '../../public/favicon.ico',
+    icon: '/favicon.ico',
   }
 };
 
