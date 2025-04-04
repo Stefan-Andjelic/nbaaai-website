@@ -1,0 +1,6 @@
+4/1/2025
+
+- All players' season totals and advanced stats
+- Add search bar, sorting, and filter for the players table
+- Add bio pic to players' details page
+- Add Twitter feed

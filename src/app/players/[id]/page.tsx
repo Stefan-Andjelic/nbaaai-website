@@ -1,5 +1,6 @@
 // src/app/players/[id]/page.tsx
 import React from "react";
+import Image from "next/image";
 import {
   Container,
   Typography,
@@ -36,7 +37,11 @@ async function fetchPlayerDetails(playerId: string) {
   }
 }
 
-// type PlayerDetailParams =
+function getPlayerImageUrl(playerId: string): string {
+  // Construct the URL to your Supabase storage
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return `${supabaseUrl}/storage/v1/object/public/player-headshot-images/${playerId}.jpg`;
+}
 
 export default async function PlayerDetailPage({
   params,
@@ -52,42 +57,72 @@ export default async function PlayerDetailPage({
   const { playerDetails, seasonStats, advancedStats } =
     await fetchPlayerDetails(id);
 
+  const playerImageUrl = playerDetails.image_url || getPlayerImageUrl(id);
+
   return (
     <Container maxWidth="xl">
-      {/* Player Header */}
-      <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-        <Typography variant="h4" gutterBottom sx={{ mr: 2 }}>
-          {playerDetails.name}
-        </Typography>
-        {playerDetails.hall_of_fame && (
-          <Chip label="Hall of Fame" color="primary" size="small" />
-        )}
-      </Box>
-
-      {/* Player Basic Info */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={6}>
-          <Typography variant="body1">
-            <strong>Position:</strong> {playerDetails.position}
-          </Typography>
-          <Typography variant="body1">
-            <strong>Height:</strong> {playerDetails.height_cm} cm
-          </Typography>
-          <Typography variant="body1">
-            <strong>Weight:</strong> {playerDetails.weight_kg} kg
-          </Typography>
+      {/* Player Header with Image */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} md={3}>
+          <Box
+            sx={{
+              width: "100%",
+              height: 280,
+              position: "relative",
+              borderRadius: 2,
+              overflow: "hidden",
+              boxShadow: 3,
+            }}
+          >
+            <Image
+              src={playerImageUrl}
+              alt={`${playerDetails.name} headshot`}
+              fill
+              style={{ objectFit: "contain", objectPosition: "center" }}
+              sizes="(max-width: 768px) 100vw, 280px"
+              quality={100}
+              priority
+            />
+          </Box>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Typography variant="body1">
-            <strong>Birth Date:</strong> {playerDetails.birth_date_text}
-          </Typography>
-          <Typography variant="body1">
-            <strong>Career:</strong> {playerDetails.year_min} -{" "}
-            {playerDetails.year_max}
-          </Typography>
-          <Typography variant="body1">
-            <strong>Colleges:</strong> {playerDetails.colleges.join(", ")}
-          </Typography>
+
+        <Grid item xs={12} md={9}>
+          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <Typography variant="h4" gutterBottom sx={{ mr: 2 }}>
+              {playerDetails.name}
+            </Typography>
+            {playerDetails.hall_of_fame && (
+              <Chip label="Hall of Fame" color="primary" size="small" />
+            )}
+          </Box>
+
+          {/* Player Basic Info */}
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="body1">
+                <strong>Position:</strong> {playerDetails.position}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Height:</strong> {playerDetails.height_cm} cm
+              </Typography>
+              <Typography variant="body1">
+                <strong>Weight:</strong> {playerDetails.weight_kg} kg
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="body1">
+                <strong>Birth Date:</strong> {playerDetails.birth_date_text}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Career:</strong> {playerDetails.year_min} -{" "}
+                {playerDetails.year_max}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Colleges:</strong>{" "}
+                {playerDetails.colleges?.join(", ") || "N/A"}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
 
