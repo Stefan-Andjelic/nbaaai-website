@@ -5,6 +5,9 @@ import Navbar from "@/components/Navbar";
 export const metadata: Metadata = {
   title: "NBAAAI - Stats and Predictions",
   description: "Best insights and predictions for the NBA",
+  icons: {
+    icon: '../../public/favicon.ico',
+  }
 };
 
 export default function RootLayout({
