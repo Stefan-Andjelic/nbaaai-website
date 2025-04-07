@@ -16,7 +16,11 @@ import {
   Box,
   Divider,
 } from "@mui/material";
-import { PlayerSeasonStats, PlayerAdvancedStats } from "@/types/supabase";
+import {
+  PlayerSeasonStats,
+  PlayerAdvancedStats,
+  PlayerPerGameStats,
+} from "@/types/supabase";
 
 async function fetchPlayerDetails(playerId: string) {
   try {
@@ -54,15 +58,16 @@ export default async function PlayerDetailPage({
     throw new Error("Player ID not provided");
   }
 
-  const { playerDetails, seasonStats, advancedStats } =
+  const { playerDetails, seasonStats, advancedStats, perGameStats } =
     await fetchPlayerDetails(id);
 
   const playerImageUrl = playerDetails.image_url || getPlayerImageUrl(id);
 
   return (
     <Container maxWidth="xl">
-      {/* Player Header with Image */}
+      {/* Player Info */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Player Header with Image */}
         <Grid item xs={12} md={3}>
           <Box
             sx={{
@@ -72,6 +77,9 @@ export default async function PlayerDetailPage({
               borderRadius: 2,
               overflow: "hidden",
               boxShadow: 3,
+              bgcolor: "background.paper", // uses themed background
+              border: "2px solid",
+              borderColor: "primary.main", // themed border
             }}
           >
             <Image
@@ -86,6 +94,7 @@ export default async function PlayerDetailPage({
           </Box>
         </Grid>
 
+        {/* Player Name and Basic Info */}
         <Grid item xs={12} md={9}>
           <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
             <Typography variant="h4" gutterBottom sx={{ mr: 2 }}>
@@ -130,8 +139,18 @@ export default async function PlayerDetailPage({
 
       {/* Season Stats Table */}
       <Grid container spacing={3}>
+        {/* Totals Stats Table */}
         <Grid item xs={12} md={6}>
-          <Paper elevation={3}>
+          <Paper
+            elevation={3}
+            sx={{
+              border: "2px solid",
+              borderColor: "primary.main",
+              borderRadius: 2,
+              overflow: "hidden",
+              bgcolor: "background.default", // background from theme
+            }}
+          >
             <Typography variant="h6" sx={{ p: 2 }}>
               Season Stats
             </Typography>
@@ -141,10 +160,10 @@ export default async function PlayerDetailPage({
                   <TableRow>
                     <TableCell>Season</TableCell>
                     <TableCell>Team</TableCell>
-                    <TableCell>PPG</TableCell>
-                    <TableCell>RPG</TableCell>
-                    <TableCell>APG</TableCell>
                     <TableCell>Games</TableCell>
+                    <TableCell>Total Points</TableCell>
+                    <TableCell>Total Rebounds</TableCell>
+                    <TableCell>Total Assists</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -152,22 +171,18 @@ export default async function PlayerDetailPage({
                     <TableRow key={`${stat.season_year}-${stat.team_id}`}>
                       <TableCell>{stat.season_year}</TableCell>
                       <TableCell>{stat.team_id}</TableCell>
+                      <TableCell>{stat.games}</TableCell>
                       <TableCell>
-                        {stat.points != null
-                          ? (stat.points / stat.games).toFixed(1)
-                          : "N/A"}
+                        {stat.points != null ? stat.points : "N/A"}
                       </TableCell>
                       <TableCell>
                         {stat.total_rebounds != null
-                          ? (stat.total_rebounds / stat.games).toFixed(1)
+                          ? stat.total_rebounds
                           : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.assists != null
-                          ? (stat.assists / stat.games).toFixed(1)
-                          : "N/A"}
+                        {stat.assists != null ? stat.assists : "N/A"}
                       </TableCell>
-                      <TableCell>{stat.games}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -178,7 +193,16 @@ export default async function PlayerDetailPage({
 
         {/* Advanced Stats Table */}
         <Grid item xs={12} md={6}>
-          <Paper elevation={3}>
+          <Paper
+            elevation={3}
+            sx={{
+              border: "2px solid",
+              borderColor: "primary.main",
+              borderRadius: 2,
+              overflow: "hidden",
+              bgcolor: "background.default", // background from theme
+            }}
+          >
             <Typography variant="h6" sx={{ p: 2 }}>
               Advanced Stats
             </Typography>
@@ -210,6 +234,72 @@ export default async function PlayerDetailPage({
                       <TableCell>
                         {stat.value_over_replacement != null
                           ? stat.value_over_replacement.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Grid>
+
+        {/* Per Game Stats Table */}
+        <Grid item xs={12} md={6}>
+          <Paper
+            elevation={3}
+            sx={{
+              border: "2px solid",
+              borderColor: "primary.main",
+              borderRadius: 2,
+              overflow: "hidden",
+              bgcolor: "background.default", // background from theme
+            }}
+          >
+            <Typography variant="h6" sx={{ p: 2 }}>
+              Per Game Stats
+            </Typography>
+            <TableContainer>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Season</TableCell>
+                    <TableCell>Team</TableCell>
+                    <TableCell>PPG</TableCell>
+                    <TableCell>RPG</TableCell>
+                    <TableCell>APG</TableCell>
+                    <TableCell>SPG</TableCell>
+                    <TableCell>BPG</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {perGameStats.map((stat: PlayerPerGameStats) => (
+                    <TableRow key={`${stat.season_year}-${stat.team_id}`}>
+                      <TableCell>{stat.season_year}</TableCell>
+                      <TableCell>{stat.team_id}</TableCell>
+                      <TableCell>
+                        {stat.points_per_game != null
+                          ? stat.points_per_game.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.total_rebounds_per_game != null
+                          ? stat.total_rebounds_per_game.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.assists_per_game != null
+                          ? stat.assists_per_game.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.steals_per_game != null
+                          ? stat.steals_per_game.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.blocks_per_game != null
+                          ? stat.blocks_per_game.toFixed(1)
                           : "N/A"}
                       </TableCell>
                     </TableRow>

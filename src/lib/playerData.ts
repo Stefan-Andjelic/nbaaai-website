@@ -108,9 +108,22 @@ export const getPlayerDetails = async (playerId: string) => {
     throw advancedStatsError;
   }
   
+  // Fetch per game stats
+  const { data: perGameStats, error: perGameStatsError } = await supabase
+    .from('player_per_game_stats')
+    .select('*')
+    .eq('player_id', playerId)
+    .order('season_year', { ascending: true });
+  
+  if (perGameStatsError) {
+    console.error('Error fetching per game stats:', perGameStatsError);
+    throw perGameStatsError;
+  }
+  
   return {
     playerDetails,
     seasonStats,
-    advancedStats
+    advancedStats,
+    perGameStats
   };
 };

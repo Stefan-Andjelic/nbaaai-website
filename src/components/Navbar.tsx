@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +59,7 @@ const Navbar = () => {
 
           {/* Logo/Brand */}
           <div className="flex items-center justify-center flex-1 sm:justify-start">
-            <div className="flex-shrink-0 text-[#1A365D]">
+            <div className="flex-shrink-0 text-[#590766]">
               <Link href="/" className="text-xl font-bold">
                 NBAAAI
               </Link>

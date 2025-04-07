@@ -80,6 +80,43 @@ export interface Player {
     value_over_replacement: number;
     awards: string;
   }
+
+  export interface PlayerPerGameStats {
+    player_id: string;
+    season_year: string;
+    team_id: string;
+    age: number;
+    comp_name_abbr: string;
+    pos: string;
+    games: number;
+    games_started: number;
+    minutes_played_per_game: number;
+    field_goals_per_game: number;
+    field_goal_attempts_per_game: number;
+    fg3a_per_fga_pct: number;
+    fta_per_fga_pct: number;
+    field_goal_pct_per_game: number;
+    three_point_field_goals_per_game: number;
+    three_point_attempts_per_game: number;
+    three_point_pct_per_game: number;
+    two_point_field_goals_per_game: number;
+    two_point_attempts_per_game: number;
+    two_point_pct_per_game: number;
+    effective_fg_pct_per_game: number;
+    free_throws_per_game: number;
+    free_throw_attempts_per_game: number;
+    free_throw_pct_per_game: number;
+    offensive_rebounds_per_game: number;
+    defensive_rebounds_per_game: number;
+    total_rebounds_per_game: number;
+    assists_per_game: number;
+    steals_per_game: number;
+    blocks_per_game: number;
+    turnovers_per_game: number;
+    personal_fouls_per_game: number;
+    points_per_game: number;
+    awards: string;
+  }
   
   export interface PlayersDataResponse {
     players: Player[];
