@@ -96,7 +96,16 @@ const PlayersTable: React.FC = () => {
   }
 
   return (
-    <Paper>
+    <Paper
+      elevation={3}
+      sx={{
+        border: "2px solid",
+        borderColor: "primary.main",
+        borderRadius: 2,
+        overflow: "hidden",
+        bgcolor: "background.default", // background from theme
+      }}
+    >
       <TableContainer>
         <Table>
           <TableHead>

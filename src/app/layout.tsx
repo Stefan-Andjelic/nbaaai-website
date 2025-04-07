@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/context/ThemeContext";
+import MUIThemeProvider from "@/components/MUIThemeProvider";
 
 export const metadata: Metadata = {
   title: "NBAAAI - Stats and Predictions",
@@ -20,10 +21,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider>
-          <Navbar />
-          <main>
-            {children}
-          </main>
+          <MUIThemeProvider>
+            <Navbar />
+            <main>
+              {children}
+            </main>
+          </MUIThemeProvider>
         </ThemeProvider>
       </body>
     </html>

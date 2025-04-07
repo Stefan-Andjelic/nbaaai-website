@@ -1,38 +1,45 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { ThemeProvider as MUIThemeProvider, CssBaseline } from '@mui/material';
-import { lightTheme, darkTheme } from '@/theme';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-const ThemeContext = createContext({
-  toggleTheme: () => {},
-  mode: 'light' as 'light' | 'dark',
-});
+type Theme = 'light' | 'dark';
 
-export const useThemeContext = () => useContext(ThemeContext);
+interface ThemeContextType {
+  mode: Theme;
+  toggleTheme: () => void;
+}
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [mode, setMode] = useState<Theme>('light');
 
   useEffect(() => {
-    const stored = localStorage.getItem('themeMode') as 'light' | 'dark' | null;
-    if (stored) setMode(stored);
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    if (savedTheme) {
+      setMode(savedTheme);
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('themeMode', mode);
-  }, [mode]);
-
-  const toggleTheme = () => setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
-
-  const theme = useMemo(() => (mode === 'light' ? lightTheme : darkTheme), [mode]);
+  const toggleTheme = () => {
+    const newTheme = mode === 'light' ? 'dark' : 'light';
+    setMode(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('dark');
+  };
 
   return (
-    <ThemeContext.Provider value={{ toggleTheme, mode }}>
-      <MUIThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </MUIThemeProvider>
+    <ThemeContext.Provider value={{ mode, toggleTheme }}>
+      {children}
     </ThemeContext.Provider>
   );
+};
+
+export const useThemeContext = () => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useThemeContext must be used within a ThemeProvider');
+  }
+  return context;
 };

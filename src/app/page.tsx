@@ -1,17 +1,21 @@
+'use client';
+
+import Link from 'next/link';
+
 export default function Home() {
   return (
-    <div className="min-h-screen p-4 md:p-8 font-[family-name:var(--font-geist-sans)]">
-      <header className="mb-8 text-center">
-        <h1 className="text-3xl font-bold">NBA Players Dashboard</h1>
-        <p className="text-gray-600 mt-2">Search, sort, and filter NBA player data</p>
-      </header>
+    <div className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center flex-grow px-4">
+        <h1 
+          className="text-5xl font-bold text-center mb-12" 
+          style={{ color: '#590766' }}
+        >
+          Where Data Meets Hardwood Glory
+        </h1>
+      </div>
       
-      <main>
-        <p>Dashboard coming...</p>
-      </main>
-      
-      <footer className="mt-16 text-center text-gray-500 text-sm">
-        <p>SAHR Productions Inc.</p>
+      <footer className="text-center text-gray-500 text-sm py-2">
+        <p>© SAHR Productions Inc. All Rights Reserved</p>
       </footer>
     </div>
   );
