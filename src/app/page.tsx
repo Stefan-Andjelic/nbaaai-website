@@ -10,8 +10,15 @@ export default function Home() {
           className="text-5xl font-bold text-center mb-12" 
           style={{ color: '#590766' }}
         >
-          Where Data Meets Hardwood Glory
+          Where the Iso meets I/O
         </h1>
+        <p>
+          <Link href="/players">
+            <span className="text-lg font-semibold text-blue-600 hover:underline">
+              Explore NBA Players
+            </span>
+          </Link>
+        </p>
       </div>
       
       <footer className="text-center text-gray-500 text-sm py-2">
