@@ -107,7 +107,7 @@ export default async function PlayerDetailPage({
 
           {/* Player Basic Info */}
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <Typography variant="body1">
                 <strong>Position:</strong> {playerDetails.position}
               </Typography>
@@ -118,7 +118,7 @@ export default async function PlayerDetailPage({
                 <strong>Weight:</strong> {playerDetails.weight_kg} kg
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <Typography variant="body1">
                 <strong>Birth Date:</strong> {playerDetails.birth_date_text}
               </Typography>
@@ -140,7 +140,7 @@ export default async function PlayerDetailPage({
       {/* Season Stats Table */}
       <Grid container spacing={3}>
         {/* Totals Stats Table */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <Paper
             elevation={3}
             sx={{
@@ -160,29 +160,75 @@ export default async function PlayerDetailPage({
                   <TableRow>
                     <TableCell>Season</TableCell>
                     <TableCell>Team</TableCell>
-                    <TableCell>Games</TableCell>
-                    <TableCell>Total Points</TableCell>
-                    <TableCell>Total Rebounds</TableCell>
-                    <TableCell>Total Assists</TableCell>
+                    <TableCell>G</TableCell>
+                    <TableCell>GS</TableCell>
+                    <TableCell>MP</TableCell>
+                    <TableCell>FGM</TableCell>
+                    <TableCell>FGA</TableCell>
+                    <TableCell>FGP</TableCell>
+                    <TableCell>3PM</TableCell>
+                    <TableCell>3PA</TableCell>
+                    <TableCell>3P%</TableCell>
+                    <TableCell>2P</TableCell>
+                    <TableCell>2PA</TableCell>
+                    <TableCell>2P%</TableCell>
+                    <TableCell>EFG%</TableCell>
+                    <TableCell>FTM</TableCell>
+                    <TableCell>FTA</TableCell>
+                    <TableCell>FT%</TableCell>
+                    <TableCell>ORB</TableCell>
+                    <TableCell>DRB</TableCell>
+                    <TableCell>TRB</TableCell>
+                    <TableCell>AST</TableCell>
+                    <TableCell>BLK</TableCell>
+                    <TableCell>STL</TableCell>
+                    <TableCell>PF</TableCell>
+                    <TableCell>TO</TableCell>
+                    <TableCell>PTS</TableCell>
+                    <TableCell>TPL-DBL</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {seasonStats.map((stat: PlayerSeasonStats) => (
-                    <TableRow key={`${stat.season_year}-${stat.team_id}`}>
+                    <TableRow 
+                        key={`${stat.season_year}-${stat.team_id}`}
+                        sx={{
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
+                            '& .MuiTableCell-root': {
+                              color: 'inherit' // Keep original text color since background is now transparent
+                            }
+                          }
+                        }}
+                    >
                       <TableCell>{stat.season_year}</TableCell>
                       <TableCell>{stat.team_id}</TableCell>
                       <TableCell>{stat.games}</TableCell>
-                      <TableCell>
-                        {stat.points != null ? stat.points : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.total_rebounds != null
-                          ? stat.total_rebounds
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.assists != null ? stat.assists : "N/A"}
-                      </TableCell>
+                      <TableCell>{stat.games_started}</TableCell>
+                      <TableCell>{stat.minutes_played}</TableCell>
+                      <TableCell>{stat.field_goals}</TableCell>
+                      <TableCell>{stat.field_goal_attempts}</TableCell>
+                      <TableCell>{stat.field_goal_pct}</TableCell>
+                      <TableCell>{stat.three_point_field_goals}</TableCell>
+                      <TableCell>{stat.three_point_attempts}</TableCell>
+                      <TableCell>{stat.three_point_pct}</TableCell>
+                      <TableCell>{stat.two_point_field_goals}</TableCell>
+                      <TableCell>{stat.two_point_attempts}</TableCell>
+                      <TableCell>{stat.two_point_pct}</TableCell>
+                      <TableCell>{stat.effective_fg_pct}</TableCell>
+                      <TableCell>{stat.free_throws}</TableCell>
+                      <TableCell>{stat.free_throw_attempts}</TableCell>
+                      <TableCell>{stat.free_throw_pct}</TableCell>
+                      <TableCell>{stat.offensive_rebounds}</TableCell>
+                      <TableCell>{stat.defensive_rebounds}</TableCell>
+                      <TableCell>{stat.total_rebounds}</TableCell>
+                      <TableCell>{stat.assists}</TableCell>
+                      <TableCell>{stat.blocks}</TableCell>
+                      <TableCell>{stat.steals}</TableCell>
+                      <TableCell>{stat.personal_fouls}</TableCell>
+                      <TableCell>{stat.turnovers}</TableCell>
+                      <TableCell>{stat.points}</TableCell>
+                      <TableCell>{stat.triple_doubles}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -192,7 +238,7 @@ export default async function PlayerDetailPage({
         </Grid>
 
         {/* Advanced Stats Table */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <Paper
             elevation={3}
             sx={{
@@ -219,7 +265,17 @@ export default async function PlayerDetailPage({
                 </TableHead>
                 <TableBody>
                   {advancedStats.map((stat: PlayerAdvancedStats) => (
-                    <TableRow key={`${stat.season_year}-${stat.team_id}`}>
+                    <TableRow 
+                      key={`${stat.season_year}-${stat.team_id}`}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
+                          '& .MuiTableCell-root': {
+                            color: 'inherit' // Keep original text color since background is now transparent
+                          }
+                        }
+                      }}
+                    >
                       <TableCell>{stat.season_year}</TableCell>
                       <TableCell>{stat.team_id}</TableCell>
                       <TableCell>
@@ -245,7 +301,7 @@ export default async function PlayerDetailPage({
         </Grid>
 
         {/* Per Game Stats Table */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <Paper
             elevation={3}
             sx={{
@@ -265,6 +321,7 @@ export default async function PlayerDetailPage({
                   <TableRow>
                     <TableCell>Season</TableCell>
                     <TableCell>Team</TableCell>
+                    <TableCell>Age</TableCell>
                     <TableCell>PPG</TableCell>
                     <TableCell>RPG</TableCell>
                     <TableCell>APG</TableCell>
@@ -274,9 +331,20 @@ export default async function PlayerDetailPage({
                 </TableHead>
                 <TableBody>
                   {perGameStats.map((stat: PlayerPerGameStats) => (
-                    <TableRow key={`${stat.season_year}-${stat.team_id}`}>
+                    <TableRow 
+                      key={`${stat.season_year}-${stat.team_id}`}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
+                          '& .MuiTableCell-root': {
+                            color: 'inherit' // Keep original text color since background is now transparent
+                          }
+                        }
+                      }}
+                    >
                       <TableCell>{stat.season_year}</TableCell>
                       <TableCell>{stat.team_id}</TableCell>
+                      <TableCell>{stat.age}</TableCell>
                       <TableCell>
                         {stat.points_per_game != null
                           ? stat.points_per_game.toFixed(1)
