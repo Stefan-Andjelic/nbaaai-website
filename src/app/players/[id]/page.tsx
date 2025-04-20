@@ -197,6 +197,12 @@ export default async function PlayerDetailPage({
                             backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
                             '& .MuiTableCell-root': {
                               color: 'inherit' // Keep original text color since background is now transparent
+                            },
+                            '&:active': {
+                              backgroundColor: 'rgba(255, 125, 0, 0.5)', // Slightly more opaque for active state
+                              '& .MuiTableCell-root': {
+                                color: 'inherit'
+                              }
                             }
                           }
                         }}
@@ -293,6 +299,12 @@ export default async function PlayerDetailPage({
                           backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
                           '& .MuiTableCell-root': {
                             color: 'inherit' // Keep original text color since background is now transparent
+                          },
+                          '&:active': {
+                            backgroundColor: 'rgba(255, 125, 0, 0.5)', // Slightly more opaque for active state
+                            '& .MuiTableCell-root': {
+                              color: 'inherit'
+                            }
                           }
                         }
                       }}
@@ -390,6 +402,12 @@ export default async function PlayerDetailPage({
                           backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
                           '& .MuiTableCell-root': {
                             color: 'inherit' // Keep original text color since background is now transparent
+                          },
+                          '&:active': {
+                            backgroundColor: 'rgba(255, 125, 0, 0.5)', // Slightly more opaque for active state
+                            '& .MuiTableCell-root': {
+                              color: 'inherit'
+                            }
                           }
                         }
                       }}
@@ -401,17 +419,17 @@ export default async function PlayerDetailPage({
                       <TableCell>{stat.minutes_played_per_game}</TableCell>
                       <TableCell>{stat.field_goals_per_game}</TableCell>
                       <TableCell>{stat.field_goal_attempts_per_game}</TableCell>
-                      <TableCell>{stat.field_goal_pct_per_game}</TableCell>
+                      <TableCell>{stat.field_goal_pct}</TableCell>
                       <TableCell>{stat.three_point_field_goals_per_game}</TableCell>
                       <TableCell>{stat.three_point_attempts_per_game}</TableCell>
-                      <TableCell>{stat.three_point_pct_per_game}</TableCell>
+                      <TableCell>{stat.three_point_pct}</TableCell>
                       <TableCell>{stat.two_point_field_goals_per_game}</TableCell>
                       <TableCell>{stat.two_point_attempts_per_game}</TableCell>
-                      <TableCell>{stat.two_point_pct_per_game}</TableCell>
-                      <TableCell>{stat.effective_fg_pct_per_game}</TableCell>
+                      <TableCell>{stat.two_point_pct}</TableCell>
+                      <TableCell>{stat.effective_fg_pct}</TableCell>
                       <TableCell>{stat.free_throws_per_game}</TableCell>
                       <TableCell>{stat.free_throw_attempts_per_game}</TableCell>
-                      <TableCell>{stat.free_throw_pct_per_game}</TableCell>
+                      <TableCell>{stat.free_throws_pct}</TableCell>
                       <TableCell>{stat.offensive_rebounds_per_game}</TableCell>
                       <TableCell>{stat.defensive_rebounds_per_game}</TableCell>
                       <TableCell>{stat.total_rebounds_per_game}</TableCell>

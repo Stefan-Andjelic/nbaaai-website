@@ -33,7 +33,7 @@ const PlayersTable: React.FC = () => {
 
   // Pagination state
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [totalCount, setTotalCount] = useState(0);
 
   const fetchPlayers = useCallback(async () => {
@@ -110,7 +110,6 @@ const PlayersTable: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Player ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Position</TableCell>
               <TableCell>Years Active</TableCell>
@@ -118,13 +117,25 @@ const PlayersTable: React.FC = () => {
           </TableHead>
           <TableBody>
             {players.map((player) => (
-              <TableRow
+            <TableRow
                 key={player.player_id}
-                hover
                 onClick={() => handlePlayerClick(player.player_id)}
                 style={{ cursor: "pointer" }}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 125, 0, 0.3) !important', // Override default hover
+                    '& .MuiTableCell-root': {
+                      color: 'inherit'
+                    }
+                  },
+                  '&:active': {
+                    backgroundColor: 'rgba(255, 125, 0, 0.5)', // Slightly more opaque for active state
+                    '& .MuiTableCell-root': {
+                      color: 'inherit'
+                    }
+                  }
+                }}
               >
-                <TableCell>{player.player_id}</TableCell>
                 <TableCell>{player.name}</TableCell>
                 <TableCell>{player.position}</TableCell>
                 <TableCell>{`${player.year_min}-${player.year_max}`}</TableCell>
