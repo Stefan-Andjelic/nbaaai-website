@@ -165,7 +165,7 @@ export default async function PlayerDetailPage({
                     <TableCell>MP</TableCell>
                     <TableCell>FGM</TableCell>
                     <TableCell>FGA</TableCell>
-                    <TableCell>FGP</TableCell>
+                    <TableCell>FG%</TableCell>
                     <TableCell>3PM</TableCell>
                     <TableCell>3PA</TableCell>
                     <TableCell>3P%</TableCell>
@@ -180,12 +180,12 @@ export default async function PlayerDetailPage({
                     <TableCell>DRB</TableCell>
                     <TableCell>TRB</TableCell>
                     <TableCell>AST</TableCell>
-                    <TableCell>BLK</TableCell>
                     <TableCell>STL</TableCell>
-                    <TableCell>PF</TableCell>
+                    <TableCell>BLK</TableCell>
                     <TableCell>TO</TableCell>
+                    <TableCell>PF</TableCell>
                     <TableCell>PTS</TableCell>
-                    <TableCell>TPL-DBL</TableCell>
+                    <TableCell>Awards</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -258,9 +258,30 @@ export default async function PlayerDetailPage({
                   <TableRow>
                     <TableCell>Season</TableCell>
                     <TableCell>Team</TableCell>
+                    <TableCell>G</TableCell>
+                    <TableCell>GS</TableCell>
+                    <TableCell>MP</TableCell>
                     <TableCell>PER</TableCell>
                     <TableCell>TS%</TableCell>
+                    <TableCell>3PAr</TableCell>
+                    <TableCell>FTr</TableCell>
+                    <TableCell>ORB%</TableCell>
+                    <TableCell>DRB%</TableCell>
+                    <TableCell>TRB%</TableCell>
+                    <TableCell>AST%</TableCell>
+                    <TableCell>STL%</TableCell>
+                    <TableCell>BLK%</TableCell>
+                    <TableCell>TOV%</TableCell>
+                    <TableCell>USG%</TableCell>
+                    <TableCell>OWS</TableCell>
+                    <TableCell>DWS</TableCell>
+                    <TableCell>WS</TableCell>
+                    <TableCell>WS/48</TableCell>
+                    <TableCell>OBPM</TableCell>
+                    <TableCell>DBPM</TableCell>
+                    <TableCell>BPM</TableCell>
                     <TableCell>VORP</TableCell>
+                    <TableCell>Awards</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -278,20 +299,31 @@ export default async function PlayerDetailPage({
                     >
                       <TableCell>{stat.season_year}</TableCell>
                       <TableCell>{stat.team_id}</TableCell>
-                      <TableCell>
-                        {stat.per != null ? stat.per.toFixed(1) : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.ts_pct != null
-                          ? (stat.ts_pct * 100).toFixed(1)
-                          : "N/A"}
-                        %
-                      </TableCell>
-                      <TableCell>
-                        {stat.value_over_replacement != null
-                          ? stat.value_over_replacement.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
+                      <TableCell>{stat.games}</TableCell>
+                      <TableCell>{stat.games_started}</TableCell>
+                      <TableCell>{stat.minutes_played}</TableCell>
+                      <TableCell>{stat.per != null ? stat.per.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.ts_pct != null ? stat.ts_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.three_point_attempt_rate != null ? stat.three_point_attempt_rate.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.free_throw_rate != null ? stat.free_throw_rate.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.offensive_rebound_pct != null ? stat.offensive_rebound_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.defensive_rebound_pct != null ? stat.defensive_rebound_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.total_rebound_pct != null ? stat.total_rebound_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.assist_pct != null ? stat.assist_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.steal_pct != null ? stat.steal_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.block_pct != null ? stat.block_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.turnover_pct != null ? stat.turnover_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.usage_pct != null ? stat.usage_pct.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.offensive_win_shares != null ? stat.offensive_win_shares.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.defensive_win_shares != null ? stat.defensive_win_shares.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.win_shares != null ? stat.win_shares.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.win_shares_per_48 != null ? stat.win_shares_per_48.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.offensive_box_plus_minus != null ? stat.offensive_box_plus_minus.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.defensive_box_plus_minus != null ? stat.defensive_box_plus_minus.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.box_plus_minus != null ? stat.box_plus_minus.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.value_over_replacement != null ? stat.value_over_replacement.toFixed(1) : "N/A"}</TableCell>
+                      <TableCell>{stat.awards != null ? stat.awards : "N/A"}</TableCell>
+                      
                     </TableRow>
                   ))}
                 </TableBody>
@@ -321,12 +353,32 @@ export default async function PlayerDetailPage({
                   <TableRow>
                     <TableCell>Season</TableCell>
                     <TableCell>Team</TableCell>
-                    <TableCell>Age</TableCell>
-                    <TableCell>PPG</TableCell>
-                    <TableCell>RPG</TableCell>
-                    <TableCell>APG</TableCell>
-                    <TableCell>SPG</TableCell>
-                    <TableCell>BPG</TableCell>
+                    <TableCell>G</TableCell>
+                    <TableCell>GS</TableCell>
+                    <TableCell>MP</TableCell>
+                    <TableCell>FGM</TableCell>
+                    <TableCell>FGA</TableCell>
+                    <TableCell>FG%</TableCell>
+                    <TableCell>3PM</TableCell>
+                    <TableCell>3PA</TableCell>
+                    <TableCell>3P%</TableCell>
+                    <TableCell>2P</TableCell>
+                    <TableCell>2PA</TableCell>
+                    <TableCell>2P%</TableCell>
+                    <TableCell>EFG%</TableCell>
+                    <TableCell>FTM</TableCell>
+                    <TableCell>FTA</TableCell>
+                    <TableCell>FT%</TableCell>
+                    <TableCell>ORB</TableCell>
+                    <TableCell>DRB</TableCell>
+                    <TableCell>TRB</TableCell>
+                    <TableCell>AST</TableCell>
+                    <TableCell>STL</TableCell>
+                    <TableCell>BLK</TableCell>
+                    <TableCell>TO</TableCell>
+                    <TableCell>PF</TableCell>
+                    <TableCell>PTS</TableCell>
+                    <TableCell>Awards</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -344,32 +396,31 @@ export default async function PlayerDetailPage({
                     >
                       <TableCell>{stat.season_year}</TableCell>
                       <TableCell>{stat.team_id}</TableCell>
-                      <TableCell>{stat.age}</TableCell>
-                      <TableCell>
-                        {stat.points_per_game != null
-                          ? stat.points_per_game.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.total_rebounds_per_game != null
-                          ? stat.total_rebounds_per_game.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.assists_per_game != null
-                          ? stat.assists_per_game.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.steals_per_game != null
-                          ? stat.steals_per_game.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.blocks_per_game != null
-                          ? stat.blocks_per_game.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
+                      <TableCell>{stat.games}</TableCell>
+                      <TableCell>{stat.games_started}</TableCell>
+                      <TableCell>{stat.minutes_played_per_game}</TableCell>
+                      <TableCell>{stat.field_goals_per_game}</TableCell>
+                      <TableCell>{stat.field_goal_attempts_per_game}</TableCell>
+                      <TableCell>{stat.field_goal_pct_per_game}</TableCell>
+                      <TableCell>{stat.three_point_field_goals_per_game}</TableCell>
+                      <TableCell>{stat.three_point_attempts_per_game}</TableCell>
+                      <TableCell>{stat.three_point_pct_per_game}</TableCell>
+                      <TableCell>{stat.two_point_field_goals_per_game}</TableCell>
+                      <TableCell>{stat.two_point_attempts_per_game}</TableCell>
+                      <TableCell>{stat.two_point_pct_per_game}</TableCell>
+                      <TableCell>{stat.effective_fg_pct_per_game}</TableCell>
+                      <TableCell>{stat.free_throws_per_game}</TableCell>
+                      <TableCell>{stat.free_throw_attempts_per_game}</TableCell>
+                      <TableCell>{stat.free_throw_pct_per_game}</TableCell>
+                      <TableCell>{stat.offensive_rebounds_per_game}</TableCell>
+                      <TableCell>{stat.defensive_rebounds_per_game}</TableCell>
+                      <TableCell>{stat.total_rebounds_per_game}</TableCell>
+                      <TableCell>{stat.assists_per_game}</TableCell>
+                      <TableCell>{stat.steals_per_game}</TableCell>
+                      <TableCell>{stat.blocks_per_game}</TableCell>
+                      <TableCell>{stat.turnovers_per_game}</TableCell>
+                      <TableCell>{stat.personal_fouls_per_game}</TableCell>
+                      <TableCell>{stat.points_per_game}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
