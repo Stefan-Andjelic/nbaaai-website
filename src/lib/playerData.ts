@@ -87,14 +87,18 @@ export const getPlayerDetails = async (playerId: string) => {
   }
 
   // Fetch season stats
+  console.log("Fetching season stats...");
   const { data: seasonTotals, error: seasonTotalsError } = await supabase
     .from("player_season_totals")
     .select("*")
     .eq("player_id", playerId)
     .order("year_id", { ascending: true });
 
-  console.log('Raw seasonTotals from Supabase:', seasonTotals);
-  console.log('First row keys:', seasonTotals?.[0] ? Object.keys(seasonTotals[0]) : 'No data');
+  console.log("Raw seasonTotals from Supabase:", seasonTotals);
+  console.log(
+    "First row keys:",
+    seasonTotals?.[0] ? Object.keys(seasonTotals[0]) : "No data"
+  );
 
   if (seasonTotalsError) {
     console.error("Error fetching season stats:", seasonTotalsError);
@@ -116,6 +120,6 @@ export const getPlayerDetails = async (playerId: string) => {
   return {
     playerDetails,
     seasonTotals,
-    advancedStats
+    advancedStats,
   };
 };

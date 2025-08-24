@@ -53,7 +53,7 @@ export default async function PlayerDetailPage({
     throw new Error("Player ID not provided");
   }
 
-  const { playerDetails, seasonStats, advancedStats } =
+  const { playerDetails, seasonTotals, advancedStats } =
     await fetchPlayerDetails(id);
 
   const playerImageUrl = playerDetails.image_url || getPlayerImageUrl(id);
@@ -170,55 +170,53 @@ export default async function PlayerDetailPage({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {seasonStats.map((stat: PlayerSeasonTotals) => {
-                    return (
-                      <TableRow
-                        key={`${stat.year_id}`}
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: "rgba(255, 125, 0, 0.3)", // 30% opacity
+                  {seasonTotals.map((stat: PlayerSeasonTotals) => (
+                    <TableRow
+                      key={`${stat.year_id}`}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 125, 0, 0.3)", // 30% opacity
+                          "& .MuiTableCell-root": {
+                            color: "inherit", // Keep original text color since background is now transparent
+                          },
+                          "&:active": {
+                            backgroundColor: "rgba(255, 125, 0, 0.5)", // Slightly more opaque for active state
                             "& .MuiTableCell-root": {
-                              color: "inherit", // Keep original text color since background is now transparent
-                            },
-                            "&:active": {
-                              backgroundColor: "rgba(255, 125, 0, 0.5)", // Slightly more opaque for active state
-                              "& .MuiTableCell-root": {
-                                color: "inherit",
-                              },
+                              color: "inherit",
                             },
                           },
-                        }}
-                      >
-                        <TableCell>{stat.year_id}</TableCell>
-                        <TableCell>{stat.games}</TableCell>
-                        <TableCell>{stat.games_started}</TableCell>
-                        <TableCell>{stat.minutes_played}</TableCell>
-                        <TableCell>{stat.field_goals}</TableCell>
-                        <TableCell>{stat.field_goal_attempts}</TableCell>
-                        <TableCell>{stat.field_goal_pct}</TableCell>
-                        <TableCell>{stat.three_point_field_goals}</TableCell>
-                        <TableCell>{stat.three_point_attempts}</TableCell>
-                        <TableCell>{stat.three_point_pct}</TableCell>
-                        <TableCell>{stat.two_point_field_goals}</TableCell>
-                        <TableCell>{stat.two_point_attempts}</TableCell>
-                        <TableCell>{stat.two_point_pct}</TableCell>
-                        <TableCell>{stat.effective_fg_pct}</TableCell>
-                        <TableCell>{stat.free_throws}</TableCell>
-                        <TableCell>{stat.free_throw_attempts}</TableCell>
-                        <TableCell>{stat.free_throw_pct}</TableCell>
-                        <TableCell>{stat.offensive_rebounds}</TableCell>
-                        <TableCell>{stat.defensive_rebounds}</TableCell>
-                        <TableCell>{stat.total_rebounds}</TableCell>
-                        <TableCell>{stat.assists}</TableCell>
-                        <TableCell>{stat.steals}</TableCell>
-                        <TableCell>{stat.blocks}</TableCell>
-                        <TableCell>{stat.turnovers}</TableCell>
-                        <TableCell>{stat.personal_fouls}</TableCell>
-                        <TableCell>{stat.points}</TableCell>
-                        <TableCell>{stat.triple_doubles}</TableCell>
-                      </TableRow>
-                    );
-                  })}
+                        },
+                      }}
+                    >
+                      <TableCell>{stat.year_id}</TableCell>
+                      <TableCell>{stat.games}</TableCell>
+                      <TableCell>{stat.games_started}</TableCell>
+                      <TableCell>{stat.mp}</TableCell>
+                      <TableCell>{stat.fg}</TableCell>
+                      <TableCell>{stat.fga}</TableCell>
+                      <TableCell>{stat.fg_pct}</TableCell>
+                      <TableCell>{stat.fg3}</TableCell>
+                      <TableCell>{stat.fg3a}</TableCell>
+                      <TableCell>{stat.fg3_pct}</TableCell>
+                      <TableCell>{stat.fg2}</TableCell>
+                      <TableCell>{stat.fg2a}</TableCell>
+                      <TableCell>{stat.fg2_pct}</TableCell>
+                      <TableCell>{stat.efg_pct}</TableCell>
+                      <TableCell>{stat.ft}</TableCell>
+                      <TableCell>{stat.fta}</TableCell>
+                      <TableCell>{stat.ft_pct}</TableCell>
+                      <TableCell>{stat.orb}</TableCell>
+                      <TableCell>{stat.drb}</TableCell>
+                      <TableCell>{stat.trb}</TableCell>
+                      <TableCell>{stat.ast}</TableCell>
+                      <TableCell>{stat.stl}</TableCell>
+                      <TableCell>{stat.blk}</TableCell>
+                      <TableCell>{stat.tov}</TableCell>
+                      <TableCell>{stat.pf}</TableCell>
+                      <TableCell>{stat.pts}</TableCell>
+                      <TableCell>{stat.tpl_dbl}</TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -292,7 +290,7 @@ export default async function PlayerDetailPage({
                       <TableCell>{stat.year_id}</TableCell>
                       <TableCell>{stat.games}</TableCell>
                       <TableCell>{stat.games_started}</TableCell>
-                      <TableCell>{stat.minutes_played}</TableCell>
+                      <TableCell>{stat.mp}</TableCell>
                       <TableCell>
                         {stat.per != null ? stat.per.toFixed(1) : "N/A"}
                       </TableCell>
@@ -300,94 +298,64 @@ export default async function PlayerDetailPage({
                         {stat.ts_pct != null ? stat.ts_pct.toFixed(1) : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.three_point_attempt_rate != null
-                          ? stat.three_point_attempt_rate.toFixed(1)
+                        {stat.fg3a_per_fga_pct != null
+                          ? stat.fg3a_per_fga_pct.toFixed(1)
                           : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.free_throw_rate != null
-                          ? stat.free_throw_rate.toFixed(1)
+                        {stat.fta_per_fga_pct != null
+                          ? stat.fta_per_fga_pct.toFixed(1)
                           : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.offensive_rebound_pct != null
-                          ? stat.offensive_rebound_pct.toFixed(1)
+                        {stat.orb_pct != null ? stat.orb_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.drb_pct != null ? stat.drb_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.trb_pct != null ? stat.trb_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.ast_pct != null ? stat.ast_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.stl_pct != null ? stat.stl_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.blk_pct != null ? stat.blk_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.tov_pct != null ? stat.tov_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.usg_pct != null ? stat.usg_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.ows != null ? stat.ows.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.dws != null ? stat.dws.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.ws != null ? stat.ws.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.ws_per_48 != null
+                          ? stat.ws_per_48.toFixed(1)
                           : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.defensive_rebound_pct != null
-                          ? stat.defensive_rebound_pct.toFixed(1)
-                          : "N/A"}
+                        {stat.obpm != null ? stat.obpm.toFixed(1) : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.total_rebound_pct != null
-                          ? stat.total_rebound_pct.toFixed(1)
-                          : "N/A"}
+                        {stat.dbpm != null ? stat.dbpm.toFixed(1) : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.assist_pct != null
-                          ? stat.assist_pct.toFixed(1)
-                          : "N/A"}
+                        {stat.bpm != null ? stat.bpm.toFixed(1) : "N/A"}
                       </TableCell>
                       <TableCell>
-                        {stat.steal_pct != null
-                          ? stat.steal_pct.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.block_pct != null
-                          ? stat.block_pct.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.turnover_pct != null
-                          ? stat.turnover_pct.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.usage_pct != null
-                          ? stat.usage_pct.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.offensive_win_shares != null
-                          ? stat.offensive_win_shares.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.defensive_win_shares != null
-                          ? stat.defensive_win_shares.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.win_shares != null
-                          ? stat.win_shares.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.win_shares_per_48 != null
-                          ? stat.win_shares_per_48.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.offensive_box_plus_minus != null
-                          ? stat.offensive_box_plus_minus.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.defensive_box_plus_minus != null
-                          ? stat.defensive_box_plus_minus.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.box_plus_minus != null
-                          ? stat.box_plus_minus.toFixed(1)
-                          : "N/A"}
-                      </TableCell>
-                      <TableCell>
-                        {stat.value_over_replacement != null
-                          ? stat.value_over_replacement.toFixed(1)
-                          : "N/A"}
+                        {stat.vorp != null ? stat.vorp.toFixed(1) : "N/A"}
                       </TableCell>
                     </TableRow>
                   ))}
