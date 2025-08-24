@@ -103,7 +103,7 @@ export const getPlayerDetails = async (playerId: string) => {
 
   // Fetch advanced stats
   const { data: advancedStats, error: advancedStatsError } = await supabase
-    .from("player_advanced_stats")
+    .from("player_season_advanced")
     .select("*")
     .eq("player_id", playerId)
     .order("year_id", { ascending: true });
