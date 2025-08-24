@@ -56,7 +56,7 @@ export default async function PlayerDetailPage({
     throw new Error("Player ID not provided");
   }
 
-  const { playerDetails, seasonStats, advancedStats, perGameStats } =
+  const { playerDetails, seasonStats, advancedStats } =
     await fetchPlayerDetails(id);
 
   const playerImageUrl = playerDetails.image_url || getPlayerImageUrl(id);
