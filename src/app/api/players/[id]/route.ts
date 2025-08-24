@@ -1,4 +1,3 @@
-// src/app/api/players/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlayerDetails } from '@/lib/playerData';
 
@@ -8,6 +7,7 @@ export async function GET(
 ) {
   try {
     const id = (await params).id;
+    console.log('Fetching details for player ID:', id);
 
     // Fetch player details
     const playerData = await getPlayerDetails(id);

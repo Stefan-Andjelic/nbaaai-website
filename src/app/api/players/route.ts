@@ -1,4 +1,3 @@
-// src/app/api/players/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlayersData } from '@/lib/playerData';
 

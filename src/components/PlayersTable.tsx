@@ -1,4 +1,3 @@
-// src/components/PlayersTable.tsx
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -138,7 +137,7 @@ const PlayersTable: React.FC = () => {
               >
                 <TableCell>{player.name}</TableCell>
                 <TableCell>{player.position}</TableCell>
-                <TableCell>{`${player.year_min}-${player.year_max}`}</TableCell>
+                <TableCell>{`${player.career_first_year}-${player.career_end_year}`}</TableCell>
               </TableRow>
             ))}
           </TableBody>

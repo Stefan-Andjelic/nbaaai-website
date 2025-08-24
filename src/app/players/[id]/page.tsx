@@ -1,4 +1,3 @@
-// src/app/players/[id]/page.tsx
 import React from "react";
 import Image from "next/image";
 import {
@@ -17,9 +16,8 @@ import {
   Divider,
 } from "@mui/material";
 import {
-  PlayerSeasonStats,
-  PlayerAdvancedStats,
-  PlayerPerGameStats,
+  PlayerSeasonTotals,
+  PlayerAdvancedStats
 } from "@/types/supabase";
 
 async function fetchPlayerDetails(playerId: string) {
@@ -96,15 +94,6 @@ export default async function PlayerDetailPage({
 
         {/* Player Name and Basic Info */}
         <Grid item xs={12} md={9}>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-            <Typography variant="h4" gutterBottom sx={{ mr: 2 }}>
-              {playerDetails.name}
-            </Typography>
-            {playerDetails.hall_of_fame && (
-              <Chip label="Hall of Fame" color="primary" size="small" />
-            )}
-          </Box>
-
           {/* Player Basic Info */}
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -120,15 +109,11 @@ export default async function PlayerDetailPage({
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1">
-                <strong>Birth Date:</strong> {playerDetails.birth_date_text}
+                <strong>Birth Date:</strong> {playerDetails.birth_date}
               </Typography>
               <Typography variant="body1">
-                <strong>Career:</strong> {playerDetails.year_min} -{" "}
-                {playerDetails.year_max}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Colleges:</strong>{" "}
-                {playerDetails.colleges?.join(", ") || "N/A"}
+                <strong>Career:</strong> {playerDetails.career_first_year} -{" "}
+                {playerDetails.career_end_year}
               </Typography>
             </Grid>
           </Grid>
@@ -137,7 +122,7 @@ export default async function PlayerDetailPage({
 
       <Divider sx={{ my: 3, border: "1px solid #FF7D00" }} />
 
-      {/* Season Stats Table */}
+      {/* All Stats Table */}
       <Grid container spacing={3}>
         {/* Totals Stats Table */}
         <Grid item xs={12}>
@@ -159,7 +144,6 @@ export default async function PlayerDetailPage({
                 <TableHead>
                   <TableRow>
                     <TableCell>Season</TableCell>
-                    <TableCell>Team</TableCell>
                     <TableCell>G</TableCell>
                     <TableCell>GS</TableCell>
                     <TableCell>MP</TableCell>
@@ -185,58 +169,59 @@ export default async function PlayerDetailPage({
                     <TableCell>TO</TableCell>
                     <TableCell>PF</TableCell>
                     <TableCell>PTS</TableCell>
-                    <TableCell>Awards</TableCell>
+                    <TableCell>TD</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {seasonStats.map((stat: PlayerSeasonStats) => (
-                    <TableRow 
-                        key={`${stat.season_year}-${stat.team_id}`}
+                  {seasonStats.map((stat: PlayerSeasonTotals) => {
+                    return (
+                      <TableRow
+                        key={`${stat.season_year}`}
                         sx={{
-                          '&:hover': {
-                            backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
-                            '& .MuiTableCell-root': {
-                              color: 'inherit' // Keep original text color since background is now transparent
+                          "&:hover": {
+                            backgroundColor: "rgba(255, 125, 0, 0.3)", // 30% opacity
+                            "& .MuiTableCell-root": {
+                              color: "inherit", // Keep original text color since background is now transparent
                             },
-                            '&:active': {
-                              backgroundColor: 'rgba(255, 125, 0, 0.5)', // Slightly more opaque for active state
-                              '& .MuiTableCell-root': {
-                                color: 'inherit'
-                              }
-                            }
-                          }
+                            "&:active": {
+                              backgroundColor: "rgba(255, 125, 0, 0.5)", // Slightly more opaque for active state
+                              "& .MuiTableCell-root": {
+                                color: "inherit",
+                              },
+                            },
+                          },
                         }}
-                    >
-                      <TableCell>{stat.season_year}</TableCell>
-                      <TableCell>{stat.team_id}</TableCell>
-                      <TableCell>{stat.games}</TableCell>
-                      <TableCell>{stat.games_started}</TableCell>
-                      <TableCell>{stat.minutes_played}</TableCell>
-                      <TableCell>{stat.field_goals}</TableCell>
-                      <TableCell>{stat.field_goal_attempts}</TableCell>
-                      <TableCell>{stat.field_goal_pct}</TableCell>
-                      <TableCell>{stat.three_point_field_goals}</TableCell>
-                      <TableCell>{stat.three_point_attempts}</TableCell>
-                      <TableCell>{stat.three_point_pct}</TableCell>
-                      <TableCell>{stat.two_point_field_goals}</TableCell>
-                      <TableCell>{stat.two_point_attempts}</TableCell>
-                      <TableCell>{stat.two_point_pct}</TableCell>
-                      <TableCell>{stat.effective_fg_pct}</TableCell>
-                      <TableCell>{stat.free_throws}</TableCell>
-                      <TableCell>{stat.free_throw_attempts}</TableCell>
-                      <TableCell>{stat.free_throw_pct}</TableCell>
-                      <TableCell>{stat.offensive_rebounds}</TableCell>
-                      <TableCell>{stat.defensive_rebounds}</TableCell>
-                      <TableCell>{stat.total_rebounds}</TableCell>
-                      <TableCell>{stat.assists}</TableCell>
-                      <TableCell>{stat.blocks}</TableCell>
-                      <TableCell>{stat.steals}</TableCell>
-                      <TableCell>{stat.personal_fouls}</TableCell>
-                      <TableCell>{stat.turnovers}</TableCell>
-                      <TableCell>{stat.points}</TableCell>
-                      <TableCell>{stat.triple_doubles}</TableCell>
-                    </TableRow>
-                  ))}
+                      >
+                        <TableCell>{stat.season_year}</TableCell>
+                        <TableCell>{stat.games}</TableCell>
+                        <TableCell>{stat.games_started}</TableCell>
+                        <TableCell>{stat.minutes_played}</TableCell>
+                        <TableCell>{stat.field_goals}</TableCell>
+                        <TableCell>{stat.field_goal_attempts}</TableCell>
+                        <TableCell>{stat.field_goal_pct}</TableCell>
+                        <TableCell>{stat.three_point_field_goals}</TableCell>
+                        <TableCell>{stat.three_point_attempts}</TableCell>
+                        <TableCell>{stat.three_point_pct}</TableCell>
+                        <TableCell>{stat.two_point_field_goals}</TableCell>
+                        <TableCell>{stat.two_point_attempts}</TableCell>
+                        <TableCell>{stat.two_point_pct}</TableCell>
+                        <TableCell>{stat.effective_fg_pct}</TableCell>
+                        <TableCell>{stat.free_throws}</TableCell>
+                        <TableCell>{stat.free_throw_attempts}</TableCell>
+                        <TableCell>{stat.free_throw_pct}</TableCell>
+                        <TableCell>{stat.offensive_rebounds}</TableCell>
+                        <TableCell>{stat.defensive_rebounds}</TableCell>
+                        <TableCell>{stat.total_rebounds}</TableCell>
+                        <TableCell>{stat.assists}</TableCell>
+                        <TableCell>{stat.steals}</TableCell>
+                        <TableCell>{stat.blocks}</TableCell>
+                        <TableCell>{stat.turnovers}</TableCell>
+                        <TableCell>{stat.personal_fouls}</TableCell>
+                        <TableCell>{stat.points}</TableCell>
+                        <TableCell>{stat.triple_doubles}</TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -263,7 +248,6 @@ export default async function PlayerDetailPage({
                 <TableHead>
                   <TableRow>
                     <TableCell>Season</TableCell>
-                    <TableCell>Team</TableCell>
                     <TableCell>G</TableCell>
                     <TableCell>GS</TableCell>
                     <TableCell>MP</TableCell>
@@ -287,158 +271,127 @@ export default async function PlayerDetailPage({
                     <TableCell>DBPM</TableCell>
                     <TableCell>BPM</TableCell>
                     <TableCell>VORP</TableCell>
-                    <TableCell>Awards</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {advancedStats.map((stat: PlayerAdvancedStats) => (
-                    <TableRow 
-                      key={`${stat.season_year}-${stat.team_id}`}
+                    <TableRow
+                      key={`${stat.season_year}`}
                       sx={{
-                        '&:hover': {
-                          backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
-                          '& .MuiTableCell-root': {
-                            color: 'inherit' // Keep original text color since background is now transparent
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 125, 0, 0.3)", // 30% opacity
+                          "& .MuiTableCell-root": {
+                            color: "inherit", // Keep original text color since background is now transparent
                           },
-                          '&:active': {
-                            backgroundColor: 'rgba(255, 125, 0, 0.5)', // Slightly more opaque for active state
-                            '& .MuiTableCell-root': {
-                              color: 'inherit'
-                            }
-                          }
-                        }
+                          "&:active": {
+                            backgroundColor: "rgba(255, 125, 0, 0.5)", // Slightly more opaque for active state
+                            "& .MuiTableCell-root": {
+                              color: "inherit",
+                            },
+                          },
+                        },
                       }}
                     >
                       <TableCell>{stat.season_year}</TableCell>
-                      <TableCell>{stat.team_id}</TableCell>
                       <TableCell>{stat.games}</TableCell>
                       <TableCell>{stat.games_started}</TableCell>
                       <TableCell>{stat.minutes_played}</TableCell>
-                      <TableCell>{stat.per != null ? stat.per.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.ts_pct != null ? stat.ts_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.three_point_attempt_rate != null ? stat.three_point_attempt_rate.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.free_throw_rate != null ? stat.free_throw_rate.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.offensive_rebound_pct != null ? stat.offensive_rebound_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.defensive_rebound_pct != null ? stat.defensive_rebound_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.total_rebound_pct != null ? stat.total_rebound_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.assist_pct != null ? stat.assist_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.steal_pct != null ? stat.steal_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.block_pct != null ? stat.block_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.turnover_pct != null ? stat.turnover_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.usage_pct != null ? stat.usage_pct.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.offensive_win_shares != null ? stat.offensive_win_shares.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.defensive_win_shares != null ? stat.defensive_win_shares.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.win_shares != null ? stat.win_shares.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.win_shares_per_48 != null ? stat.win_shares_per_48.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.offensive_box_plus_minus != null ? stat.offensive_box_plus_minus.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.defensive_box_plus_minus != null ? stat.defensive_box_plus_minus.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.box_plus_minus != null ? stat.box_plus_minus.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.value_over_replacement != null ? stat.value_over_replacement.toFixed(1) : "N/A"}</TableCell>
-                      <TableCell>{stat.awards != null ? stat.awards : "N/A"}</TableCell>
-                      
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Grid>
-
-        {/* Per Game Stats Table */}
-        <Grid item xs={12}>
-          <Paper
-            elevation={3}
-            sx={{
-              border: "2px solid",
-              borderColor: "primary.main",
-              borderRadius: 2,
-              overflow: "hidden",
-              bgcolor: "background.default", // background from theme
-            }}
-          >
-            <Typography variant="h6" sx={{ p: 2 }}>
-              Per Game Stats
-            </Typography>
-            <TableContainer>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Season</TableCell>
-                    <TableCell>Team</TableCell>
-                    <TableCell>G</TableCell>
-                    <TableCell>GS</TableCell>
-                    <TableCell>MP</TableCell>
-                    <TableCell>FGM</TableCell>
-                    <TableCell>FGA</TableCell>
-                    <TableCell>FG%</TableCell>
-                    <TableCell>3PM</TableCell>
-                    <TableCell>3PA</TableCell>
-                    <TableCell>3P%</TableCell>
-                    <TableCell>2P</TableCell>
-                    <TableCell>2PA</TableCell>
-                    <TableCell>2P%</TableCell>
-                    <TableCell>EFG%</TableCell>
-                    <TableCell>FTM</TableCell>
-                    <TableCell>FTA</TableCell>
-                    <TableCell>FT%</TableCell>
-                    <TableCell>ORB</TableCell>
-                    <TableCell>DRB</TableCell>
-                    <TableCell>TRB</TableCell>
-                    <TableCell>AST</TableCell>
-                    <TableCell>STL</TableCell>
-                    <TableCell>BLK</TableCell>
-                    <TableCell>TO</TableCell>
-                    <TableCell>PF</TableCell>
-                    <TableCell>PTS</TableCell>
-                    <TableCell>Awards</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {perGameStats.map((stat: PlayerPerGameStats) => (
-                    <TableRow 
-                      key={`${stat.season_year}-${stat.team_id}`}
-                      sx={{
-                        '&:hover': {
-                          backgroundColor: 'rgba(255, 125, 0, 0.3)', // 30% opacity
-                          '& .MuiTableCell-root': {
-                            color: 'inherit' // Keep original text color since background is now transparent
-                          },
-                          '&:active': {
-                            backgroundColor: 'rgba(255, 125, 0, 0.5)', // Slightly more opaque for active state
-                            '& .MuiTableCell-root': {
-                              color: 'inherit'
-                            }
-                          }
-                        }
-                      }}
-                    >
-                      <TableCell>{stat.season_year}</TableCell>
-                      <TableCell>{stat.team_id}</TableCell>
-                      <TableCell>{stat.games}</TableCell>
-                      <TableCell>{stat.games_started}</TableCell>
-                      <TableCell>{stat.minutes_played_per_game}</TableCell>
-                      <TableCell>{stat.field_goals_per_game}</TableCell>
-                      <TableCell>{stat.field_goal_attempts_per_game}</TableCell>
-                      <TableCell>{stat.field_goal_pct}</TableCell>
-                      <TableCell>{stat.three_point_field_goals_per_game}</TableCell>
-                      <TableCell>{stat.three_point_attempts_per_game}</TableCell>
-                      <TableCell>{stat.three_point_pct}</TableCell>
-                      <TableCell>{stat.two_point_field_goals_per_game}</TableCell>
-                      <TableCell>{stat.two_point_attempts_per_game}</TableCell>
-                      <TableCell>{stat.two_point_pct}</TableCell>
-                      <TableCell>{stat.effective_fg_pct}</TableCell>
-                      <TableCell>{stat.free_throws_per_game}</TableCell>
-                      <TableCell>{stat.free_throw_attempts_per_game}</TableCell>
-                      <TableCell>{stat.free_throws_pct}</TableCell>
-                      <TableCell>{stat.offensive_rebounds_per_game}</TableCell>
-                      <TableCell>{stat.defensive_rebounds_per_game}</TableCell>
-                      <TableCell>{stat.total_rebounds_per_game}</TableCell>
-                      <TableCell>{stat.assists_per_game}</TableCell>
-                      <TableCell>{stat.steals_per_game}</TableCell>
-                      <TableCell>{stat.blocks_per_game}</TableCell>
-                      <TableCell>{stat.turnovers_per_game}</TableCell>
-                      <TableCell>{stat.personal_fouls_per_game}</TableCell>
-                      <TableCell>{stat.points_per_game}</TableCell>
+                      <TableCell>
+                        {stat.per != null ? stat.per.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.ts_pct != null ? stat.ts_pct.toFixed(1) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.three_point_attempt_rate != null
+                          ? stat.three_point_attempt_rate.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.free_throw_rate != null
+                          ? stat.free_throw_rate.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.offensive_rebound_pct != null
+                          ? stat.offensive_rebound_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.defensive_rebound_pct != null
+                          ? stat.defensive_rebound_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.total_rebound_pct != null
+                          ? stat.total_rebound_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.assist_pct != null
+                          ? stat.assist_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.steal_pct != null
+                          ? stat.steal_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.block_pct != null
+                          ? stat.block_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.turnover_pct != null
+                          ? stat.turnover_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.usage_pct != null
+                          ? stat.usage_pct.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.offensive_win_shares != null
+                          ? stat.offensive_win_shares.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.defensive_win_shares != null
+                          ? stat.defensive_win_shares.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.win_shares != null
+                          ? stat.win_shares.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.win_shares_per_48 != null
+                          ? stat.win_shares_per_48.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.offensive_box_plus_minus != null
+                          ? stat.offensive_box_plus_minus.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.defensive_box_plus_minus != null
+                          ? stat.defensive_box_plus_minus.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.box_plus_minus != null
+                          ? stat.box_plus_minus.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {stat.value_over_replacement != null
+                          ? stat.value_over_replacement.toFixed(1)
+                          : "N/A"}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
