@@ -15,10 +15,7 @@ import {
   Box,
   Divider,
 } from "@mui/material";
-import {
-  PlayerSeasonTotals,
-  PlayerAdvancedStats
-} from "@/types/supabase";
+import { PlayerSeasonTotals, PlayerAdvancedStats } from "@/types/supabase";
 
 async function fetchPlayerDetails(playerId: string) {
   try {
@@ -176,7 +173,7 @@ export default async function PlayerDetailPage({
                   {seasonStats.map((stat: PlayerSeasonTotals) => {
                     return (
                       <TableRow
-                        key={`${stat.season_year}`}
+                        key={`${stat.year_id}`}
                         sx={{
                           "&:hover": {
                             backgroundColor: "rgba(255, 125, 0, 0.3)", // 30% opacity
@@ -192,7 +189,7 @@ export default async function PlayerDetailPage({
                           },
                         }}
                       >
-                        <TableCell>{stat.season_year}</TableCell>
+                        <TableCell>{stat.year_id}</TableCell>
                         <TableCell>{stat.games}</TableCell>
                         <TableCell>{stat.games_started}</TableCell>
                         <TableCell>{stat.minutes_played}</TableCell>
@@ -220,7 +217,7 @@ export default async function PlayerDetailPage({
                         <TableCell>{stat.points}</TableCell>
                         <TableCell>{stat.triple_doubles}</TableCell>
                       </TableRow>
-                    )
+                    );
                   })}
                 </TableBody>
               </Table>
@@ -276,7 +273,7 @@ export default async function PlayerDetailPage({
                 <TableBody>
                   {advancedStats.map((stat: PlayerAdvancedStats) => (
                     <TableRow
-                      key={`${stat.season_year}`}
+                      key={`${stat.year_id}`}
                       sx={{
                         "&:hover": {
                           backgroundColor: "rgba(255, 125, 0, 0.3)", // 30% opacity
@@ -292,7 +289,7 @@ export default async function PlayerDetailPage({
                         },
                       }}
                     >
-                      <TableCell>{stat.season_year}</TableCell>
+                      <TableCell>{stat.year_id}</TableCell>
                       <TableCell>{stat.games}</TableCell>
                       <TableCell>{stat.games_started}</TableCell>
                       <TableCell>{stat.minutes_played}</TableCell>
