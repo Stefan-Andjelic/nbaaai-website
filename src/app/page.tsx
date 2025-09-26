@@ -1,8 +1,10 @@
-'use client';
-
+import { LeaderboardCard } from '@/components/LeaderboardCard';
+import { getLeaderboards } from '@/lib/leaderboardData';
 import Link from 'next/link';
 
-export default function Home() {
+export default async function Home() {
+  const leaderboardData = await getLeaderboards();
+  
   return (
     <div className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center flex-grow px-4">
@@ -19,6 +21,24 @@ export default function Home() {
             </span>
           </Link>
         </p>
+        <LeaderboardCard 
+          title="Scoring Leaders" 
+          stat="PPG" 
+          timeframe="CURRENT_SEASON" 
+          data={leaderboardData.currentSeason.ppg} 
+        />
+        <LeaderboardCard 
+          title="Assist Leaders" 
+          stat="APG" 
+          timeframe="CURRENT_SEASON" 
+          data={leaderboardData.currentSeason.apg} 
+        />
+        <LeaderboardCard 
+          title="Rebound Leaders" 
+          stat="RPG" 
+          timeframe="CURRENT_SEASON" 
+          data={leaderboardData.currentSeason.rpg} 
+        />
       </div>
       
       <footer className="text-center text-gray-500 text-sm py-2">
