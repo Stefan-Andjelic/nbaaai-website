@@ -20,7 +20,8 @@ export function LeaderboardCard({
   maxEntries = 5,
 }: LeaderboardCardProps) {
   return (
-    <Card className="w-full">
+    // make the border faded purple
+    <Card className="w-full border-2 border-opacity-100 border-[#FF7D00]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
