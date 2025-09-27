@@ -16,6 +16,7 @@ import {
   Divider,
 } from "@mui/material";
 import { PlayerSeasonTotals, PlayerAdvancedStats } from "@/types/supabase";
+import { getPlayerImageUrl } from "@/lib/utils";
 
 async function fetchPlayerDetails(playerId: string) {
   try {
@@ -34,12 +35,6 @@ async function fetchPlayerDetails(playerId: string) {
     console.error("Error fetching player details:", error);
     throw error;
   }
-}
-
-function getPlayerImageUrl(playerId: string): string {
-  // Construct the URL to your Supabase storage
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  return `${supabaseUrl}/storage/v1/object/public/player-headshot-images/${playerId}.jpg`;
 }
 
 export default async function PlayerDetailPage({

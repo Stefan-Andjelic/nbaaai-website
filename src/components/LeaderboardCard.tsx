@@ -1,5 +1,7 @@
 import { LeaderboardEntry } from "@/types/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { getPlayerImageUrl } from "@/lib/utils";
+import Image from 'next/image';
 
 interface LeaderboardCardProps {
     title: string;
@@ -26,9 +28,25 @@ export function LeaderboardCard({
                 <div className="space-y-2">
                     {data.slice(0, maxEntries).map((player, index) => (
                         <div key={player.player_id} className="flex justify-between items-center">
-                            <span className="text-sm">
+                            
+                            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200">
+                                <Image
+                                src={getPlayerImageUrl(player.player_id)}
+                                alt={`${player.player_id} headshot`}
+                                fill
+                                className="object-cover"
+                                sizes="40px"
+                                />
+                            </div>
+
+                            {/* RANK & NAME */}
+                            <div className="flex-1 min-w-0">
+                                <span className="text-sm font-medium">
                                 {index + 1}. {player.player_id}
-                            </span>
+                                </span>
+                            </div>
+
+                            {/* STAT VALUE */}
                             <span className="font-semibold">
                                 {player.value}
                             </span>
