@@ -78,6 +78,7 @@ export interface PlayersDataResponse {
 
 export interface LeaderboardEntry {
   player_id: string;
+  player_name: string;
   value: number; // The stat value (PPG, APG, etc.)
   rank: number;
 }
