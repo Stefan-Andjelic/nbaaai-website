@@ -1,6 +1,5 @@
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { getLeaderboards } from '@/lib/leaderboardData';
-import Link from 'next/link';
 
 export default async function Home() {
   const leaderboardData = await getLeaderboards();

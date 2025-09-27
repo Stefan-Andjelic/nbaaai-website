@@ -30,8 +30,6 @@ const Navbar = () => {
   const navItems = [
     { name: 'Players', href: '/players' },
     { name: 'Predictions', href: '/predictions' },
-    { name: 'X Feed', href: '/x-feed'},
-    { name: 'Twitter Feed', href: '/x-feed' },
     { name: 'Ethical Leaderboard', href: '/ethical-leaderboard' }
   ];
 
