@@ -22,20 +22,20 @@ export function LeaderboardCard({
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
-                {/* <Badge variant="outline">{timeframe}</Badge> */}
             </CardHeader>
             <CardContent>
-                <div className="space-y-2">
+                <div className="space-y-3">
                     {data.slice(0, maxEntries).map((player, index) => (
                         <div key={player.player_id} className="flex justify-between items-center">
                             
-                            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200">
+                            <div className="relative w-12 h-12 rounded-md overflow-hidden bg-gray-200 flex-shrink-0">
                                 <Image
                                 src={getPlayerImageUrl(player.player_id)}
                                 alt={`${player.player_id} headshot`}
                                 fill
                                 className="object-cover"
-                                sizes="40px"
+                                sizes="48px"
+                                quality={90}
                                 />
                             </div>
 

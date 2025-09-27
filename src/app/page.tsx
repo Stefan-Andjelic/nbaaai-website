@@ -6,10 +6,9 @@ export default async function Home() {
   const leaderboardData = await getLeaderboards();
   
   return (
-    <div className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900">
-
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Header Section */}
-      <div className="flex flex-col items-center justify-center flex-grow px-4">
+      <div className="flex flex-col items-center px-4 py-12">
         <h1 
           className="text-5xl font-bold text-center mb-12" 
           style={{ color: '#590766' }}
