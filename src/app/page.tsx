@@ -1,23 +1,26 @@
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { getLeaderboards } from '@/lib/leaderboardData';
+import { PlayerSearch } from '@/components/PlayerSearch';
 
 export default async function Home() {
   const leaderboardData = await getLeaderboards();
   
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Header Section */}
       <div className="flex flex-col items-center px-4 py-12">
         <h1 
-          className="text-5xl font-bold text-center mb-12" 
+          className="text-3xl font-bold text-center mb-12" 
           style={{ color: '#590766' }}
         >
           Where the Iso meets I/O
         </h1>
 
+        {/* Player Search */}
+        <PlayerSearch />
+
         {/* Leaderboards Grid (Current Season) */}
         <div className="w-full max-w-7xl">
-          <h2 className="text-3xl font-bold text-center mb-8">Current Season Leaders (2024-25)</h2>
+          <h2 className="text-xl font-bold text-center mb-8 underline">Current Season Leaders (2024-25)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <LeaderboardCard 
               title="Scoring Leaders" 
@@ -54,7 +57,7 @@ export default async function Home() {
 
         {/* Leaderboards Grid (All-Time) */}
         <div className="w-full max-w-7xl">
-          <h2 className="text-3xl font-bold text-center mb-8">All-Time Leaders</h2>
+          <h2 className="text-xl font-bold text-center mb-8 underline">All-Time Leaders</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <LeaderboardCard 
               title="Scoring Leaders" 
