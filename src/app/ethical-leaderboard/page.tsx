@@ -67,6 +67,7 @@ export default function EthicalLeaderboardsPage() {
                   topN: leaderboard.topN,
                   statFilters: leaderboard.filters
                 }}
+                leaderboardId={leaderboard.id}
               />
             ))}
           </div>
