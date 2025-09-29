@@ -34,7 +34,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`sticky top-0 z-50 bg-white text-black transition-all duration-300 ${
+    <nav className={`sticky top-0 z-50 bg-white text-black transition-all duration-300 border-b-2 border-purple-200 shadow-sm ${
       scrolled ? 'shadow-md' : ''
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
