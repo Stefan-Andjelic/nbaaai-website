@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { CreateLeaderboardButton } from "@/components/ethical-leaderboards/CreateLeaderboardButton";
 import { LeaderboardEntry } from '@/types/supabase';
+import { 
+  FEATURED_LEADERBOARDS, 
+  getAllFeaturedLeaderboards 
+} from '@/lib/featuredLeaderboards';
 
 interface CustomLeaderboard {
   id: string;
@@ -21,8 +25,26 @@ const STORAGE_KEY = 'custom_leaderboards';
 
 export default function EthicalLeaderboardsPage() {
   const [customLeaderboards, setCustomLeaderboards] = useState<CustomLeaderboard[]>([]);
+  const [featuredData, setFeaturedData] = useState<Record<string, LeaderboardEntry[]>>({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load from localStorage on mount
+  // Load featured leaderboards on mount
+  useEffect(() => {
+    const loadFeaturedLeaderboards = async () => {
+      try {
+        const data = await getAllFeaturedLeaderboards(5);
+        setFeaturedData(data);
+      } catch (error) {
+        console.error('Error loading featured leaderboards:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadFeaturedLeaderboards();
+  }, []);
+
+  // Load custom leaderboards from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -62,6 +84,16 @@ export default function EthicalLeaderboardsPage() {
     setCustomLeaderboards(prev => [...prev, newLeaderboard]);
   };
 
+  // Generate leaderboard ID for featured boards
+  const getFeaturedLeaderboardId = (board: any) => {
+    const config = {
+      title: board.title,
+      topN: 5,
+      statFilters: board.filters,
+    };
+    return btoa(JSON.stringify(config));
+  };
+
   return (
     <div className="container mx-auto p-6">
       {/* Header with Create Button */}
@@ -70,13 +102,34 @@ export default function EthicalLeaderboardsPage() {
         <CreateLeaderboardButton onSuccess={handleLeaderboardCreated} />
       </div>
 
-      {/* Your existing pre-defined cards section */}
+      {/* Featured Leaderboards */}
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Featured Leaderboards</h2>
-        {/* Your pre-defined cards go here */}
+        {isLoading ? (
+          <p className="text-muted-foreground">Loading...</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURED_LEADERBOARDS.map((board) => (
+              <LeaderboardCard
+                key={board.id}
+                title={board.title}
+                stat="PPG"
+                timeframe="CURRENT_SEASON"
+                data={featuredData[board.id] || []}
+                maxEntries={5}
+                isCustom={true}
+                customConfig={{
+                  topN: 5,
+                  statFilters: board.filters,
+                }}
+                leaderboardId={getFeaturedLeaderboardId(board)}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* Custom Leaderboards Section - Only show if user has created any */}
+      {/* Custom Leaderboards - Only show if user has created any */}
       {customLeaderboards.length > 0 && (
         <section>
           <h2 className="text-2xl font-semibold mb-4">Your Custom Leaderboards</h2>
