@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { CreateLeaderboardButton } from "@/components/ethical-leaderboards/CreateLeaderboardButton";
 import { LeaderboardEntry } from '@/types/supabase';
@@ -17,21 +17,48 @@ interface CustomLeaderboard {
   }>;
 }
 
+const STORAGE_KEY = 'custom_leaderboards';
+
 export default function EthicalLeaderboardsPage() {
-  // State to store all custom leaderboards
   const [customLeaderboards, setCustomLeaderboards] = useState<CustomLeaderboard[]>([]);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        setCustomLeaderboards(JSON.parse(saved));
+      } catch (error) {
+        console.error('Error loading leaderboards:', error);
+      }
+    }
+  }, []);
+
+  // Save to localStorage whenever leaderboards change
+  useEffect(() => {
+    if (customLeaderboards.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(customLeaderboards));
+    }
+  }, [customLeaderboards]);
 
   // Callback function when new leaderboard is created
   const handleLeaderboardCreated = (apiResponse: any) => {
-    const newLeaderboard: CustomLeaderboard = {
-      id: Date.now().toString(), // Generate unique ID
+    const config = {
       title: apiResponse.title,
-      results: apiResponse.results, // Already in LeaderboardEntry format
       topN: 5,
-      filters: apiResponse.filters
+      statFilters: apiResponse.filters,
     };
     
-    // Add to existing leaderboards
+    const encodedConfig = btoa(JSON.stringify(config));
+    
+    const newLeaderboard: CustomLeaderboard = {
+      id: encodedConfig,
+      title: apiResponse.title,
+      results: apiResponse.results,
+      topN: 5,
+      filters: apiResponse.filters,
+    };
+    
     setCustomLeaderboards(prev => [...prev, newLeaderboard]);
   };
 

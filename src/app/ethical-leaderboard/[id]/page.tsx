@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LeaderboardConfigModal } from "@/components/LeaderboardCardModal";
 import { useParams, useRouter } from "next/navigation";
 import { LeaderboardEntry } from "@/types/supabase";
 import { getPlayerImageUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 interface FullLeaderboard {
   title: string;
