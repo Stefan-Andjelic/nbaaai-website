@@ -8,6 +8,8 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <div className="flex flex-col items-center px-4 py-12">
+
+        {/* Page Title */}
         <h1 
           className="text-3xl font-bold text-center mb-12" 
           style={{ color: '#590766' }}
