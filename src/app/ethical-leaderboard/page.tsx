@@ -9,6 +9,12 @@ interface CustomLeaderboard {
   id: string;
   title: string;
   results: LeaderboardEntry[];
+  topN: number;
+  filters: Array<{
+    stat: string;
+    operator: string;
+    value: number;
+  }>;
 }
 
 export default function EthicalLeaderboardsPage() {
@@ -21,6 +27,8 @@ export default function EthicalLeaderboardsPage() {
       id: Date.now().toString(), // Generate unique ID
       title: apiResponse.title,
       results: apiResponse.results, // Already in LeaderboardEntry format
+      topN: 5,
+      filters: apiResponse.filters
     };
     
     // Add to existing leaderboards
@@ -54,6 +62,11 @@ export default function EthicalLeaderboardsPage() {
                 timeframe="CURRENT_SEASON"
                 data={leaderboard.results}
                 maxEntries={5}
+                isCustom={true}
+                customConfig={{
+                  topN: leaderboard.topN,
+                  statFilters: leaderboard.filters
+                }}
               />
             ))}
           </div>
