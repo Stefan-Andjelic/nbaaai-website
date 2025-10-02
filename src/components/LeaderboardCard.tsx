@@ -203,8 +203,8 @@ export function LeaderboardCard({
           )}
 
           {/* Branding footer for shared images */}
-          <div className="mt-4 pt-4 border-t border-gray-200 text-center text-[#590766]">
-            <p className="text-xs text-muted-foreground text-[#590766]">
+          <div className="mt-4 pt-4 border-t border-gray-200 text-center">
+            <p className="text-xs text-[#590766] font-medium">
               NBAAAI • Ethical Leaderboards
             </p>
           </div>
