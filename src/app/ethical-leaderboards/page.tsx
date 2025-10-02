@@ -32,7 +32,9 @@ export default function EthicalLeaderboardsPage() {
   useEffect(() => {
     const loadFeaturedLeaderboards = async () => {
       try {
+        console.log('Loading featured leaderboards...');
         const data = await getAllFeaturedLeaderboards(5);
+        console.log('Featured leaderboards loaded:', data);
         setFeaturedData(data);
       } catch (error) {
         console.error('Error loading featured leaderboards:', error);

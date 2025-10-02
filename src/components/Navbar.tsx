@@ -30,7 +30,7 @@ const Navbar = () => {
   const navItems = [
     { name: 'Players', href: '/players' },
     { name: 'Predictions', href: '/predictions' },
-    { name: 'Ethical Leaderboard', href: '/ethical-leaderboard' }
+    { name: 'Ethical Leaderboards', href: '/ethical-leaderboards' }
   ];
 
   return (
