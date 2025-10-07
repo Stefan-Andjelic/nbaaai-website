@@ -18,6 +18,12 @@ import {
 import { PlayerSeasonTotals, PlayerAdvancedStats } from "@/types/supabase";
 import { getPlayerImageUrl } from "@/lib/utils";
 
+const formatStat = (value: any, decimals: number = 1): string => {
+  if (value == null) return "N/A";
+  const num = typeof value === 'number' ? value : parseFloat(value);
+  return isNaN(num) ? "N/A" : num.toFixed(decimals);
+};
+
 async function fetchPlayerDetails(playerId: string) {
   try {
     // Use absolute URL with environment variable
@@ -287,70 +293,64 @@ export default async function PlayerDetailPage({
                       <TableCell>{stat.games_started}</TableCell>
                       <TableCell>{stat.mp}</TableCell>
                       <TableCell>
-                        {stat.per != null ? stat.per.toFixed(1) : "N/A"}
+                        {formatStat(stat.per, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.ts_pct != null ? stat.ts_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.ts_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.fg3a_per_fga_pct != null
-                          ? stat.fg3a_per_fga_pct.toFixed(1)
-                          : "N/A"}
+                        {formatStat(stat.fg3a_per_fga_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.fta_per_fga_pct != null
-                          ? stat.fta_per_fga_pct.toFixed(1)
-                          : "N/A"}
+                        {formatStat(stat.fta_per_fga_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.orb_pct != null ? stat.orb_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.orb_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.drb_pct != null ? stat.drb_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.drb_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.trb_pct != null ? stat.trb_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.trb_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.ast_pct != null ? stat.ast_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.ast_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.stl_pct != null ? stat.stl_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.stl_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.blk_pct != null ? stat.blk_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.blk_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.tov_pct != null ? stat.tov_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.tov_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.usg_pct != null ? stat.usg_pct.toFixed(1) : "N/A"}
+                        {formatStat(stat.usg_pct, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.ows != null ? stat.ows.toFixed(1) : "N/A"}
+                        {formatStat(stat.ows, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.dws != null ? stat.dws.toFixed(1) : "N/A"}
+                        {formatStat(stat.dws, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.ws != null ? stat.ws.toFixed(1) : "N/A"}
+                        {formatStat(stat.ws, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.ws_per_48 != null
-                          ? stat.ws_per_48.toFixed(1)
-                          : "N/A"}
+                        {formatStat(stat.ws_per_48, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.obpm != null ? stat.obpm.toFixed(1) : "N/A"}
+                        {formatStat(stat.obpm, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.dbpm != null ? stat.dbpm.toFixed(1) : "N/A"}
+                        {formatStat(stat.dbpm, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.bpm != null ? stat.bpm.toFixed(1) : "N/A"}
+                        {formatStat(stat.bpm, 3)}
                       </TableCell>
                       <TableCell>
-                        {stat.vorp != null ? stat.vorp.toFixed(1) : "N/A"}
+                        {formatStat(stat.vorp, 3)}
                       </TableCell>
                     </TableRow>
                   ))}
