@@ -293,7 +293,7 @@ export default async function PlayerDetailPage({
                       <TableCell>{stat.games_started}</TableCell>
                       <TableCell>{stat.mp}</TableCell>
                       <TableCell>
-                        {formatStat(stat.per, 3)}
+                        {formatStat(stat.per, 1)}
                       </TableCell>
                       <TableCell>
                         {formatStat(stat.ts_pct, 3)}
