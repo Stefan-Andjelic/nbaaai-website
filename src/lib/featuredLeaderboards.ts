@@ -1,4 +1,4 @@
-import { createSupabaseClient } from "./supabaseClient";
+import sql from './db';
 import { LeaderboardEntry } from "@/types/supabase";
 
 export interface FeaturedLeaderboard {
@@ -25,7 +25,7 @@ export const FEATURED_LEADERBOARDS: FeaturedLeaderboard[] = [
       { stat: 'pts', operator: '>=', value: 30 },
       { stat: 'trb', operator: '>=', value: 10 },
       { stat: 'ast', operator: '>=', value: 10 },
-      { stat: 'ft', operator: '<', value: 8 },
+      { stat: 'fta', operator: '<', value: 8 },
     ],
   },
   {
@@ -55,27 +55,32 @@ export const FEATURED_LEADERBOARDS: FeaturedLeaderboard[] = [
 ];
 
 export async function getFeaturedLeaderboard(
-  viewName: string,
+  leaderboardId: string,
   limit: number = 5
 ): Promise<LeaderboardEntry[]> {
-  const supabase = createSupabaseClient();
-
-  const { data, error } = await supabase
-    .from(viewName)
-    .select('player_id, player_name, games_achieved')
-    .limit(limit);
-
-  if (error) {
-    console.error(`Error fetching ${viewName}:`, error);
-    throw error;
+  const board = FEATURED_LEADERBOARDS.find(b => b.id === leaderboardId);
+  
+  if (!board) {
+    throw new Error(`Featured leaderboard not found: ${leaderboardId}`);
   }
 
-  return data.map((row, index) => ({
-    player_id: row.player_id,
-    player_name: row.player_name,
-    value: row.games_achieved,
-    rank: index + 1,
-  }));
+  try {
+    const data = await sql.unsafe(`
+      SELECT player_id, player_name, games_achieved
+      FROM ${board.viewName}
+      LIMIT ${limit}
+    `);
+
+    return data.map((row: any, index: number) => ({
+      player_id: row.player_id,
+      player_name: row.player_name,
+      value: parseInt(row.games_achieved),
+      rank: index + 1,
+    }));
+  } catch (error) {
+    console.error(`Error fetching featured leaderboard ${leaderboardId}:`, error);
+    throw error;
+  }
 }
 
 export async function getAllFeaturedLeaderboards(
@@ -86,7 +91,7 @@ export async function getAllFeaturedLeaderboards(
   await Promise.all(
     FEATURED_LEADERBOARDS.map(async (board) => {
       try {
-        results[board.id] = await getFeaturedLeaderboard(board.viewName, limit);
+        results[board.id] = await getFeaturedLeaderboard(board.id, limit);
       } catch (error) {
         console.error(`Error loading ${board.id}:`, error);
         results[board.id] = [];
