@@ -19,7 +19,12 @@ export async function getCustomLeaderboardDirect(
 ): Promise<LeaderboardEntry[]> {
   const supabase = createSupabaseClient();
 
-  // Build WHERE clause
+  // Build WHERE clause\
+  if (request.statFilters.length === 0) {
+    throw new Error('At least one stat filter is required.');
+  }
+
+  console.log('Building conditions for filters:', request.statFilters);
   const conditions = request.statFilters
     .map((filter: any) => {
       // Escape values to prevent SQL injection
@@ -29,12 +34,15 @@ export async function getCustomLeaderboardDirect(
       return `${filter.stat} ${filter.operator} ${value}`;
     })
     .join(' AND ');
+  console.log('Constructed conditions:', conditions);
 
   // Call database function to do counting server-side
+  console.log('Fetching leaderboard with conditions:', conditions);
   const { data, error } = await supabase.rpc('get_custom_leaderboard', {
     p_conditions: conditions,
     p_limit: request.topN
   });
+  console.log('Raw leaderboard data:', data);
 
   if (error) {
     console.error('Error fetching leaderboard:', error);
