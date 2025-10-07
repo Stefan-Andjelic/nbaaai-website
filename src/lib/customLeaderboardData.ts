@@ -1,4 +1,3 @@
-import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseClient } from "./supabaseClient";
 import { LeaderboardEntry } from "@/types/supabase";
 
