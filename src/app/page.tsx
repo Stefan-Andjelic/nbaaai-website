@@ -1,5 +1,5 @@
 import { LeaderboardCard } from '@/components/LeaderboardCard';
-import { getLeaderboards } from '@/lib/leaderboardData';
+import { getLeaderboards } from '@/lib/leaderboardDataServer';
 import { PlayerSearch } from '@/components/PlayerSearch';
 
 export default async function Home() {

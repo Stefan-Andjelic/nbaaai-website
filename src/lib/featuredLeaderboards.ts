@@ -1,5 +1,3 @@
-import { LeaderboardEntry } from "@/types/supabase";
-
 export interface FeaturedLeaderboard {
   id: string;
   title: string;

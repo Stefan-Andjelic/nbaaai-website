@@ -1,4 +1,3 @@
-import { createSupabaseClient } from "./supabaseClient";
 import sql from "./db";
 import { Player, PlayersDataResponse } from "@/types/supabase";
 
