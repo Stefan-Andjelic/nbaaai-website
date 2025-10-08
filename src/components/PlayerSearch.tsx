@@ -66,7 +66,7 @@ export function PlayerSearch({ onPlayerSelect, selectedPlayer, showAsLink }: Pla
   // If a player is selected and we're in selection mode, show the selected player
   if (selectedPlayer && onPlayerSelect) {
     return (
-      <div className="relative w-full">
+      <div className="relative w-full max-w-2xl mx-auto">
         <div className="flex items-center gap-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800">
           <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
             <Image
@@ -93,7 +93,7 @@ export function PlayerSearch({ onPlayerSelect, selectedPlayer, showAsLink }: Pla
   }
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full max-w-2xl mx-auto">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <input
