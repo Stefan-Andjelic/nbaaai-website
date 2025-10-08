@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { CreateLeaderboardButton } from "@/components/ethical-leaderboards/CreateLeaderboardButton";
 import { LeaderboardEntry } from '@/types/supabase';
-import { 
-  FEATURED_LEADERBOARDS, 
-  getAllFeaturedLeaderboards 
-} from '@/lib/featuredLeaderboards';
+import { FEATURED_LEADERBOARDS } from '@/lib/featuredLeaderboards';
+
+const STORAGE_KEY = 'custom_leaderboards';
 
 interface CustomLeaderboard {
   id: string;
@@ -21,8 +20,6 @@ interface CustomLeaderboard {
   }>;
 }
 
-const STORAGE_KEY = 'custom_leaderboards';
-
 export default function EthicalLeaderboardsPage() {
   const [customLeaderboards, setCustomLeaderboards] = useState<CustomLeaderboard[]>([]);
   const [featuredData, setFeaturedData] = useState<Record<string, LeaderboardEntry[]>>({});
@@ -33,8 +30,14 @@ export default function EthicalLeaderboardsPage() {
     const loadFeaturedLeaderboards = async () => {
       try {
         console.log('Loading featured leaderboards...');
-        const data = await getAllFeaturedLeaderboards(5);
-        console.log('Featured leaderboards loaded:', data);
+        const response = await fetch('/api/leaderboards/featured?limit=5');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Featured leaderboards loaded!');
         setFeaturedData(data);
       } catch (error) {
         console.error('Error loading featured leaderboards:', error);
