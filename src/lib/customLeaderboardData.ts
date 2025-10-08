@@ -22,7 +22,7 @@ export async function getCustomLeaderboardDirect(
 
   // Validate all stat names to prevent SQL injection
   const allowedStats = [
-    'pts', 'ast', 'trb', 'stl', 'blk', 'fg_pct', 'fg3_pct', 'ft_pct', 'f',
+    'pts', 'ast', 'trb', 'stl', 'blk', 'fg_pct', 'fg3_pct', 'ft_pct', 'ft',
     'fga', 'fgm', 'fg3a', 'fg3', 'fg3m', 'fta', 'ftm', 'oreb', 'dreb', 'tov', 'pf',
     'orb', 'drb', 'mp', 'gs', 'plus_minus'
   ];
