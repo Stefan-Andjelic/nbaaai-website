@@ -76,7 +76,7 @@ export function LeaderboardForm({ onClose, onSuccess }: LeaderboardFormProps) {
   };
 
   const addStatFilter = () => {
-    append({ stat: "pts", operator: ">=", value: 10 });
+    append({ stat: "ast", operator: ">=", value: 10 });
   };
 
   return (

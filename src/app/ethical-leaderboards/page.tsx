@@ -89,6 +89,11 @@ export default function EthicalLeaderboardsPage() {
     setCustomLeaderboards(prev => [...prev, newLeaderboard]);
   };
 
+  // Delete handler for custom leaderboards
+  const handleDeleteLeaderboard = (leaderboardId: string) => {
+    setCustomLeaderboards(prev => prev.filter(lb => lb.id !== leaderboardId));
+  };
+
   // Generate leaderboard ID for featured boards
   const getFeaturedLeaderboardId = (board: any) => {
     const config = {
@@ -154,6 +159,7 @@ export default function EthicalLeaderboardsPage() {
                   statFilters: leaderboard.filters
                 }}
                 leaderboardId={leaderboard.id}
+                onDelete={() => handleDeleteLeaderboard(leaderboard.id)}
               />
             ))}
           </div>

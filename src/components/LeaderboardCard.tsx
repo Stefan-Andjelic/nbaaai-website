@@ -4,11 +4,11 @@ import { LeaderboardEntry } from "@/types/supabase";
 import { LeaderboardConfigModal } from "./LeaderboardCardModal";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./ui/dialog";
 import { getPlayerImageUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { Settings, Download, Share2, Copy, Check } from "lucide-react";
+import { Settings, Download, Share2, Copy, Check, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
 
@@ -29,6 +29,7 @@ interface LeaderboardCardProps {
     }>;
   };
   leaderboardId?: string; // For generating URL to full list page
+  onDelete?: () => void;
 }
 
 export function LeaderboardCard({
@@ -40,9 +41,11 @@ export function LeaderboardCard({
   isCustom = false,
   customConfig,
   leaderboardId,
+  onDelete,
 }: LeaderboardCardProps) {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -114,6 +117,17 @@ export function LeaderboardCard({
     }
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (onDelete) {
+      onDelete();
+    }
+    setIsDeleteDialogOpen(false);
+  };
+
   return (
     <>
       <Card
@@ -155,6 +169,19 @@ export function LeaderboardCard({
                   title="View configuration"
                 >
                   <Settings className="h-4 w-4" />
+                </Button>
+              )}
+
+              {/* Delete Button - Only for Custom Leaderboards */}
+              {isCustom && onDelete && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                  onClick={handleDeleteClick}
+                  title="Delete leaderboard"
+                >
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               )}
             </div>
@@ -216,6 +243,32 @@ export function LeaderboardCard({
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Leaderboard</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{title}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Share Modal */}
       <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>

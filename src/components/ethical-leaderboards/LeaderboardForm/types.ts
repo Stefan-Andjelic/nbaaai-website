@@ -33,6 +33,9 @@ export const AVAILABLE_STATS: AvailableStat[] = [
   { key: 'fta', label: 'Free Throw Attempts', description: 'Free throw attempts' },
   { key: 'tov', label: 'Turnovers', description: 'Turnovers' },
   { key: 'pf', label: 'Personal Fouls', description: 'Personal fouls committed' },
+  { key: 'fg_pct', label: 'Field Goal Percentage', description: 'Field goal percentage' },
+  { key: 'fg3_pct', label: '3-Point Percentage', description: '3-point field goal percentage' },
+  { key: 'ft_pct', label: 'Free Throw Percentage', description: 'Free throw percentage' },
 ];
 
 export const STAT_OPERATORS: { value: StatOperator; label: string }[] = [
