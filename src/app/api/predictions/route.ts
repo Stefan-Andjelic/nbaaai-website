@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse} from 'next/server';
-import { createSupabaseClient } from '@/lib/supabaseClient';
+import { NextRequest, NextResponse } from 'next/server';
+import sql from '@/lib/db';
 import { generateAnonymousUsername, formatPredictionText } from '@/lib/predictionUtils';
 import { CreatePredictionInput } from '@/types/predictions';
 
@@ -11,31 +11,45 @@ export async function GET(request: NextRequest) {
     const sortOrder = searchParams.get('sortOrder') || 'desc';
     const predictionType = searchParams.get('type');
 
-    const supabase = createSupabaseClient();
+    // Validate sortBy to prevent SQL injection
+    const allowedSortColumns = ['created_at', 'username', 'player_name', 'target_value'];
+    const validSortBy = allowedSortColumns.includes(sortBy) ? sortBy : 'created_at';
+    const validSortOrder = sortOrder === 'asc' ? 'ASC' : 'DESC';
 
-    let query = supabase
-      .from('predictions')
-      .select('*');
+    // Build query dynamically
+    let whereConditions = [];
+    let params: any[] = [];
 
     // Apply search filter
     if (search) {
-      query = query.or(`username.ilike.%${search}%,player_name.ilike.%${search}%,prediction_text.ilike.%${search}%`);
+      whereConditions.push(`(
+        username ILIKE $${params.length + 1} OR 
+        player_name ILIKE $${params.length + 2} OR 
+        prediction_text ILIKE $${params.length + 3}
+      )`);
+      const searchPattern = `%${search}%`;
+      params.push(searchPattern, searchPattern, searchPattern);
     }
 
     // Apply type filter
     if (predictionType && (predictionType === 'season' || predictionType === 'game')) {
-      query = query.eq('prediction_type', predictionType);
+      whereConditions.push(`prediction_type = $${params.length + 1}`);
+      params.push(predictionType);
     }
 
-    // Apply sorting
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+    // Build WHERE clause
+    const whereClause = whereConditions.length > 0 
+      ? `WHERE ${whereConditions.join(' AND ')}` 
+      : '';
 
-    const { data, error } = await query;
+    // Execute query
+    const query = `
+      SELECT * FROM predictions
+      ${whereClause}
+      ORDER BY ${validSortBy} ${validSortOrder}
+    `;
 
-    if (error) {
-      console.error('Error fetching predictions:', error);
-      return NextResponse.json({ error: 'Failed to fetch predictions' }, { status: 500 });
-    }
+    const data = await sql.unsafe(query, params);
 
     return NextResponse.json(data);
   } catch (error) {
@@ -46,7 +60,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createSupabaseClient();
     const body: CreatePredictionInput = await request.json();
 
     // Validate required fields
@@ -84,30 +97,43 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert prediction
-    const { data, error } = await supabase
-      .from('predictions')
-      .insert([
-        {
-          username,
-          prediction_type: body.prediction_type,
-          prediction_text: predictionText,
-          player_id: body.player_id || null,
-          player_name: body.player_name || null,
-          stat_type: body.stat_type,
-          comparison_operator: body.comparison_operator,
-          target_value: body.target_value,
-          season: body.season || null,
-          game_id: body.game_id || null,
-          game_date: body.game_date || null,
-          is_after_start: isAfterStart,
-          current_value: 0,
-        },
-      ])
-      .select()
-      .single();
+    const [data] = await sql`
+      INSERT INTO predictions (
+        username,
+        prediction_type,
+        prediction_text,
+        player_id,
+        player_name,
+        stat_type,
+        comparison_operator,
+        target_value,
+        season,
+        game_id,
+        game_date,
+        is_after_start,
+        current_value,
+        created_at
+      )
+      VALUES (
+        ${username},
+        ${body.prediction_type},
+        ${predictionText},
+        ${body.player_id || null},
+        ${body.player_name || null},
+        ${body.stat_type},
+        ${body.comparison_operator},
+        ${body.target_value},
+        ${body.season || null},
+        ${body.game_id || null},
+        ${body.game_date || null},
+        ${isAfterStart},
+        0,
+        NOW()
+      )
+      RETURNING *
+    `;
 
-    if (error) {
-      console.error('Error creating prediction:', error);
+    if (!data) {
       return NextResponse.json({ error: 'Failed to create prediction' }, { status: 500 });
     }
 
