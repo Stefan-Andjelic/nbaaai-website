@@ -11,7 +11,7 @@ export default async function Home() {
 
         {/* Page Title */}
         <h1 
-          className="text-3xl font-bold text-center mb-12" 
+          className="text-4xl font-bold text-center mb-12" 
           style={{ color: '#590766' }}
         >
           Where the Iso meets I/O
@@ -21,8 +21,8 @@ export default async function Home() {
         <PlayerSearch />
 
         {/* Leaderboards Grid (Current Season) */}
-        <div className="w-full max-w-7xl">
-          <h2 className="text-xl font-bold text-center mb-8 underline">Current Season Leaders (2024-25)</h2>
+        <div className="w-full max-w-7xl mt-8">
+          <h2 className="text-xl font-bold text-center mb-8 underline">Season Leaders (2024-25)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <LeaderboardCard 
               title="Scoring Leaders" 
