@@ -13,8 +13,9 @@ import {
 import {
   GraphDataPoint,
   PlayerInfo,
-  STAT_LABELS,
   StatMetric,
+  AggregationType,
+  STAT_LABELS,
 } from "@/types/visualizations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPlayerImageUrl } from "@/lib/utils";
@@ -24,6 +25,7 @@ interface GraphDisplayProps {
   data: GraphDataPoint[];
   players: PlayerInfo[];
   metric: StatMetric;
+  aggregation: AggregationType;
   title?: string;
 }
 
@@ -112,6 +114,7 @@ export function GraphDisplay({
   data,
   players,
   metric,
+  aggregation,
   title,
 }: GraphDisplayProps) {
   if (!data || data.length === 0) {
@@ -152,7 +155,7 @@ export function GraphDisplay({
               />
               <YAxis
                 label={{
-                  value: STAT_LABELS[metric],
+                  value: STAT_LABELS[aggregation][metric],
                   angle: -90,
                   position: "insideLeft",
                 }}

@@ -4,7 +4,13 @@ import { useState, useEffect } from "react";
 import { GraphConfigForm } from "@/components/visualizations/GraphConfigForm";
 import { GraphDisplay } from "@/components/visualizations/GraphDisplay";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -16,12 +22,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Save, TrendingUp, Trash2 } from "lucide-react";
-import Link from "next/link";
 import {
-  GraphAPIResponse,
-  GraphConfig,
   StatMetric,
   ContextType,
+  AggregationType,
+  GraphConfig,
+  GraphAPIResponse,
   STAT_ABBREVIATIONS,
 } from "@/types/visualizations";
 import {
@@ -43,6 +49,7 @@ export default function VisualizationsPage() {
     seasonStart: number;
     seasonEnd: number;
     context: ContextType;
+    aggregation?: AggregationType;
   } | null>(null);
 
   // Load saved graphs on mount
@@ -66,11 +73,13 @@ export default function VisualizationsPage() {
     seasonStart: number;
     seasonEnd: number;
     context: ContextType;
+    aggregation?: AggregationType;
   }) => {
     setIsLoading(true);
     setCurrentConfig(config);
 
     try {
+      console.log(`Generating graph with config:`, config);
       const response = await fetch("/api/visualizations/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -121,6 +130,7 @@ export default function VisualizationsPage() {
       seasonStart: currentConfig.seasonStart,
       seasonEnd: currentConfig.seasonEnd,
       context: currentConfig.context,
+      aggregation: currentConfig.aggregation || "per_game",
       createdAt: Date.now(),
     };
 
@@ -157,6 +167,7 @@ export default function VisualizationsPage() {
       seasonStart: graph.seasonStart,
       seasonEnd: graph.seasonEnd,
       context: graph.context,
+      aggregation: graph.aggregation,
     });
   };
 
@@ -227,6 +238,7 @@ export default function VisualizationsPage() {
                 data={graphData.data}
                 players={graphData.players}
                 metric={graphData.metric}
+                aggregation={currentConfig?.aggregation || "per_game"}
               />
               <div className="flex justify-end">
                 <Button onClick={handleSaveGraph} className="gap-2">
@@ -263,7 +275,7 @@ export default function VisualizationsPage() {
                             {graph.name}
                           </CardTitle>
                           <CardDescription className="mt-1">
-                            {STAT_ABBREVIATIONS[graph.metric]} •{" "}
+                            {STAT_ABBREVIATIONS[graph.aggregation][graph.metric]} •{" "}
                             {graph.seasonStart}-{graph.seasonEnd} •{" "}
                             {getContextLabel(graph.context)} •{" "}
                             {graph.playerIds.length} player

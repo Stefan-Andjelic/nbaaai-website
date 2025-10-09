@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchGraphData } from '@/lib/visualizationDataServer';
-import { StatMetric, ContextType } from '@/types/visualizations';
+import { StatMetric, ContextType, AggregationType } from '@/types/visualizations';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
-    const { playerIds, metric, seasonStart, seasonEnd, context } = body;
+
+    const { playerIds, metric, seasonStart, seasonEnd, context, aggregation } = body;
 
     // Validation
     if (!playerIds || !Array.isArray(playerIds) || playerIds.length === 0) {
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
       seasonStart: parseInt(seasonStart),
       seasonEnd: parseInt(seasonEnd),
       context: (context || 'all') as ContextType,
+      aggregation: (aggregation || 'per_game') as AggregationType
     });
 
     return NextResponse.json(data);

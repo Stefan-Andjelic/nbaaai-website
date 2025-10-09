@@ -1,5 +1,6 @@
-export type StatMetric = 'pts' | 'reb' | 'ast' | 'stl' | 'blk' | 'fg_pct';
+export type StatMetric = 'pts' | 'trb' | 'ast' | 'stl' | 'blk' | 'fg_pct';
 export type ContextType = 'regular' | 'playoffs' | 'all';
+export type AggregationType = 'per_game' | 'totals';
 
 export interface GraphConfig {
   id: string;
@@ -9,6 +10,7 @@ export interface GraphConfig {
   seasonStart: number;
   seasonEnd: number;
   context: ContextType;
+  aggregation: AggregationType;
   createdAt: number;
 }
 
@@ -28,21 +30,45 @@ export interface GraphAPIResponse {
   metric: StatMetric;
 }
 
-// For display purposes
-export const STAT_LABELS: Record<StatMetric, string> = {
-  pts: 'Points Per Game',
-  reb: 'Rebounds Per Game',
-  ast: 'Assists Per Game',
-  stl: 'Steals Per Game',
-  blk: 'Blocks Per Game',
-  fg_pct: 'Field Goal %',
+// Separate stat lists for each mode
+export const COUNTING_STATS: StatMetric[] = ['pts', 'trb', 'ast', 'stl', 'blk'];
+export const PERCENTAGE_STATS: StatMetric[] = ['fg_pct'];
+
+// For display purposes - labels change based on aggregation type
+export const STAT_LABELS: Record<AggregationType, Record<StatMetric, string>> = {
+  per_game: {
+    pts: 'Points Per Game',
+    trb: 'Rebounds Per Game',
+    ast: 'Assists Per Game',
+    stl: 'Steals Per Game',
+    blk: 'Blocks Per Game',
+    fg_pct: 'Field Goal %',
+  },
+  totals: {
+    pts: 'Total Points',
+    trb: 'Total Rebounds',
+    ast: 'Total Assists',
+    stl: 'Total Steals',
+    blk: 'Total Blocks',
+    fg_pct: 'Field Goal %',
+  }
 };
 
-export const STAT_ABBREVIATIONS: Record<StatMetric, string> = {
-  pts: 'PPG',
-  reb: 'RPG',
-  ast: 'APG',
-  stl: 'SPG',
-  blk: 'BPG',
-  fg_pct: 'FG%',
+export const STAT_ABBREVIATIONS: Record<AggregationType, Record<StatMetric, string>> = {
+  per_game: {
+    pts: 'PPG',
+    trb: 'RPG',
+    ast: 'APG',
+    stl: 'SPG',
+    blk: 'BPG',
+    fg_pct: 'FG%',
+  },
+  totals: {
+    pts: 'PTS',
+    trb: 'TRB',
+    ast: 'AST',
+    stl: 'STL',
+    blk: 'BLK',
+    fg_pct: 'FG%',
+  }
 };
