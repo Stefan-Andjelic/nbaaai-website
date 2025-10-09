@@ -32,7 +32,7 @@ interface GraphConfigFormProps {
 
 const currentYear = new Date().getFullYear();
 const DEFAULT_SEASON_START = 2015;
-const DEFAULT_SEASON_END = 2024;
+const DEFAULT_SEASON_END = 2025;
 
 export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFormProps) {
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);

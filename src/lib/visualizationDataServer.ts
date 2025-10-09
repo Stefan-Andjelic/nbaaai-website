@@ -16,8 +16,8 @@ export async function fetchGraphData(params: FetchGraphDataParams) {
         throw new Error('At least one player ID is required');
     }
 
-    if (playerIds.length > 5) {
-        throw new Error('A maximum of 5 players can be compared at once');
+    if (playerIds.length > 8) {
+        throw new Error('A maximum of 8 players can be compared at once');
     }
 
     try {
@@ -37,9 +37,9 @@ export async function fetchGraphData(params: FetchGraphDataParams) {
 
         let contextFilter = '';
         if (context === 'regular') {
-            contextFilter = "AND playoff_flag = false";
+            contextFilter = "AND playoff_flag = f";
         } else if (context === 'playoffs') {
-            contextFilter = "AND playoff_flag = true";
+            contextFilter = "AND playoff_flag = t";
         }
         // 'all' context requires no additional filter
 
@@ -56,6 +56,7 @@ export async function fetchGraphData(params: FetchGraphDataParams) {
                 AND season_year >= ${seasonStart}
                 AND season_year <= ${seasonEnd}
                 AND ${sql(dbColumn)} IS NOT NULL
+                AND playoff_flag = false
             GROUP BY player_id, season_year
             ORDER BY season_year ASC, player_id ASC
             `
@@ -71,6 +72,7 @@ export async function fetchGraphData(params: FetchGraphDataParams) {
                 AND season_year >= ${seasonStart}
                 AND season_year <= ${seasonEnd}
                 AND ${sql(dbColumn)} IS NOT NULL
+                AND playoff_flag = true
             GROUP BY player_id, season_year
             ORDER BY season_year ASC, player_id ASC
             `
