@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { playerIds, metric, seasonStart, seasonEnd, context, aggregation } = body;
+    const { playerIds, metric, seasonStart, seasonEnd, context, aggregation, xAxisType } = body;
 
     // Validation
     if (!playerIds || !Array.isArray(playerIds) || playerIds.length === 0) {
@@ -46,7 +46,8 @@ export async function POST(request: NextRequest) {
       seasonStart: parseInt(seasonStart),
       seasonEnd: parseInt(seasonEnd),
       context: (context || 'all') as ContextType,
-      aggregation: (aggregation || 'per_game') as AggregationType
+      aggregation: (aggregation || 'per_game') as AggregationType,
+      xAxisType,
     });
 
     return NextResponse.json(data);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PlayerMultiSelect } from "./PlayerMultiSelect";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { StatMetric, ContextType, AggregationType, STAT_LABELS, COUNTING_STATS, PERCENTAGE_STATS } from "@/types/visualizations";
+import {
+  StatMetric,
+  ContextType,
+  AggregationType,
+  STAT_LABELS,
+  COUNTING_STATS,
+  PERCENTAGE_STATS,
+  getAvailableStats,
+  XAxisType,
+} from "@/types/visualizations";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface Player {
@@ -27,7 +36,8 @@ interface GraphConfigFormProps {
     seasonStart: number;
     seasonEnd: number;
     context: ContextType;
-    aggregation?: AggregationType;
+    aggregation: AggregationType;
+    xAxisType: XAxisType;
   }) => void;
   isLoading?: boolean;
 }
@@ -36,18 +46,29 @@ const currentYear = new Date().getFullYear();
 const DEFAULT_SEASON_START = 2015;
 const DEFAULT_SEASON_END = 2025;
 
-export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFormProps) {
+export function GraphConfigForm({
+  onGenerate,
+  isLoading = false,
+}: GraphConfigFormProps) {
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
   const [aggregation, setAggregation] = useState<AggregationType>("per_game");
   const [metric, setMetric] = useState<StatMetric>("pts");
   const [seasonStart, setSeasonStart] = useState<number>(DEFAULT_SEASON_START);
   const [seasonEnd, setSeasonEnd] = useState<number>(DEFAULT_SEASON_END);
   const [context, setContext] = useState<ContextType>("regular");
+  const [xAxisType, setXAxisType] = useState<XAxisType>("season");
 
-  // Get available stats (all stats available in both modes)
-  const getAvailableStats = (): StatMetric[] => {
-    return [...COUNTING_STATS, ...PERCENTAGE_STATS];
-  };
+  // Get available stats based on aggregation mode
+  const availableStats = getAvailableStats(aggregation);
+  const countingStats = availableStats.filter(stat => COUNTING_STATS.includes(stat));
+  const percentageStats = availableStats.filter(stat => PERCENTAGE_STATS.includes(stat));
+
+  // Reset metric if it becomes unavailable after aggregation change
+  useEffect(() => {
+    if (!availableStats.includes(metric)) {
+      setMetric(availableStats[0]);
+    }
+  }, [aggregation, availableStats, metric]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,13 +89,10 @@ export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFo
       seasonStart,
       seasonEnd,
       context,
-      aggregation
+      aggregation,
+      xAxisType,
     });
   };
-
-  const availableStats = getAvailableStats();
-  const countingStats = availableStats.filter(stat => COUNTING_STATS.includes(stat));
-  const percentageStats = availableStats.filter(stat => PERCENTAGE_STATS.includes(stat));
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -88,29 +106,81 @@ export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFo
         />
       </div>
 
-      {/* Aggregation Type */}
-      <div className="space-y-3">
-        <Label>Aggregation Mode</Label>
-        <RadioGroup value={aggregation} onValueChange={(value) => setAggregation(value as AggregationType)}>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="per_game" id="per_game" />
-            <Label htmlFor="per_game" className="font-normal cursor-pointer">
-              Per Game
-            </Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="totals" id="totals" />
-            <Label htmlFor="totals" className="font-normal cursor-pointer">
-              Season Totals
-            </Label>
-          </div>
-        </RadioGroup>
+      {/* Aggregation Type & X-Axis Type - Horizontal Layout */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* Aggregation Type */}
+        <div className="space-y-3">
+          <Label>Aggregation Mode</Label>
+          <RadioGroup
+            value={aggregation}
+            onValueChange={(value) => setAggregation(value as AggregationType)}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="per_game" id="per_game" />
+              <Label htmlFor="per_game" className="font-normal cursor-pointer">
+                Per Game
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="totals" id="totals" />
+              <Label htmlFor="totals" className="font-normal cursor-pointer">
+                Season Totals
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="totals_cumulative" id="totals_cumulative" />
+              <Label htmlFor="totals_cumulative" className="font-normal cursor-pointer">
+                Cumulative Totals
+              </Label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* X-Axis Type */}
+        <div className="space-y-3">
+          <Label>X-Axis Display</Label>
+          <RadioGroup
+            value={xAxisType}
+            onValueChange={(value) => setXAxisType(value as XAxisType)}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="season" id="season" />
+              <Label htmlFor="season" className="font-normal cursor-pointer">
+                Season Year
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="career_year" id="career_year" />
+              <Label
+                htmlFor="career_year"
+                className="font-normal cursor-pointer"
+              >
+                Career Year
+              </Label>
+            </div>
+          </RadioGroup>
+        </div>
       </div>
+
+      {/* Help text - Full width below both */}
+      {xAxisType === 'career_year' && (
+        <p className="text-xs text-muted-foreground -mt-2">
+          Compare players by their career progression (Year 1, Year 2, etc.)
+        </p>
+      )}
+      {aggregation === 'totals_cumulative' && (
+        <p className="text-xs text-muted-foreground -mt-2">
+          Shows running career totals (only available for counting stats)
+        </p>
+      )}
 
       {/* Stat Metric */}
       <div className="space-y-2">
         <Label htmlFor="metric">Statistic</Label>
-        <Select value={metric} onValueChange={(value) => setMetric(value as StatMetric)}>
+        <Select
+          value={metric}
+          onValueChange={(value) => setMetric(value as StatMetric)}
+        >
           <SelectTrigger id="metric">
             <SelectValue />
           </SelectTrigger>
@@ -128,7 +198,7 @@ export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFo
                 ))}
               </>
             )}
-            
+
             {/* Percentage Stats Group */}
             {percentageStats.length > 0 && (
               <>
@@ -149,23 +219,27 @@ export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFo
       {/* Season Range */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="seasonStart">Start Season</Label>
+          <Label htmlFor="seasonStart">
+            {xAxisType === "career_year" ? "Min Career Year" : "Start Season"}
+          </Label>
           <Input
             id="seasonStart"
             type="number"
-            min={1979}
-            max={currentYear}
+            min={xAxisType === "career_year" ? 1 : 1980}
+            max={xAxisType === "career_year" ? 30 : currentYear}
             value={seasonStart}
             onChange={(e) => setSeasonStart(parseInt(e.target.value))}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="seasonEnd">End Season</Label>
+          <Label htmlFor="seasonEnd">
+            {xAxisType === "career_year" ? "Max Career Year" : "End Season"}
+          </Label>
           <Input
             id="seasonEnd"
             type="number"
-            min={1979}
-            max={currentYear}
+            min={xAxisType === "career_year" ? 1 : 1980}
+            max={xAxisType === "career_year" ? 30 : currentYear}
             value={seasonEnd}
             onChange={(e) => setSeasonEnd(parseInt(e.target.value))}
           />
@@ -175,7 +249,10 @@ export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFo
       {/* Context */}
       <div className="space-y-2">
         <Label htmlFor="context">Game Context</Label>
-        <Select value={context} onValueChange={(value) => setContext(value as ContextType)}>
+        <Select
+          value={context}
+          onValueChange={(value) => setContext(value as ContextType)}
+        >
           <SelectTrigger id="context">
             <SelectValue />
           </SelectTrigger>
@@ -188,7 +265,11 @@ export function GraphConfigForm({ onGenerate, isLoading = false }: GraphConfigFo
       </div>
 
       {/* Generate Button */}
-      <Button type="submit" className="w-full" disabled={isLoading || selectedPlayers.length === 0}>
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isLoading || selectedPlayers.length === 0}
+      >
         {isLoading ? "Generating..." : "Generate Graph"}
       </Button>
     </form>

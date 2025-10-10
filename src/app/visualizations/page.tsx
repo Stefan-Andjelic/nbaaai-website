@@ -29,6 +29,7 @@ import {
   GraphConfig,
   GraphAPIResponse,
   STAT_ABBREVIATIONS,
+  XAxisType,
 } from "@/types/visualizations";
 import {
   getSavedGraphs,
@@ -50,6 +51,7 @@ export default function VisualizationsPage() {
     seasonEnd: number;
     context: ContextType;
     aggregation?: AggregationType;
+    xAxisType?: XAxisType;
   } | null>(null);
 
   // Load saved graphs on mount
@@ -74,6 +76,7 @@ export default function VisualizationsPage() {
     seasonEnd: number;
     context: ContextType;
     aggregation?: AggregationType;
+    xAxisType?: XAxisType;
   }) => {
     setIsLoading(true);
     setCurrentConfig(config);
@@ -131,6 +134,7 @@ export default function VisualizationsPage() {
       seasonEnd: currentConfig.seasonEnd,
       context: currentConfig.context,
       aggregation: currentConfig.aggregation || "per_game",
+      xAxisType: currentConfig.xAxisType || "season",
       createdAt: Date.now(),
     };
 
@@ -168,6 +172,7 @@ export default function VisualizationsPage() {
       seasonEnd: graph.seasonEnd,
       context: graph.context,
       aggregation: graph.aggregation,
+      xAxisType: graph.xAxisType,
     });
   };
 
@@ -186,6 +191,15 @@ export default function VisualizationsPage() {
       all: "All Games",
     };
     return labels[context];
+  };
+
+  const getAggregationLabel = (aggregation: AggregationType) => {
+    const labels: Record<AggregationType, string> = {
+      per_game: "Per Game",
+      totals: "Totals",
+      totals_cumulative: "Cumulative Totals",
+    };
+    return labels[aggregation];
   };
 
   return (
@@ -232,13 +246,14 @@ export default function VisualizationsPage() {
                 </div>
               </CardContent>
             </Card>
-          ) : graphData ? (
+          ) : graphData && currentConfig ? (
             <div className="space-y-4">
               <GraphDisplay
                 data={graphData.data}
                 players={graphData.players}
                 metric={graphData.metric}
-                aggregation={currentConfig?.aggregation || "per_game"}
+                aggregation={currentConfig?.aggregation}
+                xAxisType={currentConfig?.xAxisType}
               />
               <div className="flex justify-end">
                 <Button onClick={handleSaveGraph} className="gap-2">
@@ -278,6 +293,8 @@ export default function VisualizationsPage() {
                             {STAT_ABBREVIATIONS[graph.aggregation][graph.metric]} •{" "}
                             {graph.seasonStart}-{graph.seasonEnd} •{" "}
                             {getContextLabel(graph.context)} •{" "}
+                            {getAggregationLabel(graph.aggregation)} •{" "}
+                            {graph.xAxisType === 'career_year' ? 'Career Years' : 'Season Years'} •{" "}
                             {graph.playerIds.length} player
                             {graph.playerIds.length !== 1 ? "s" : ""}
                           </CardDescription>

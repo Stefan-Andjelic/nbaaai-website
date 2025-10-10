@@ -16,6 +16,7 @@ import {
   StatMetric,
   AggregationType,
   STAT_LABELS,
+  XAxisType,
 } from "@/types/visualizations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPlayerImageUrl } from "@/lib/utils";
@@ -25,7 +26,8 @@ interface GraphDisplayProps {
   data: GraphDataPoint[];
   players: PlayerInfo[];
   metric: StatMetric;
-  aggregation: AggregationType;
+  aggregation?: AggregationType;
+  xAxisType?: XAxisType;
   title?: string;
 }
 
@@ -115,6 +117,7 @@ export function GraphDisplay({
   players,
   metric,
   aggregation,
+  xAxisType,
   title,
 }: GraphDisplayProps) {
   if (!data || data.length === 0) {
@@ -128,6 +131,10 @@ export function GraphDisplay({
       </Card>
     );
   }
+
+  // Determine which key to use for X-axis
+  const xAxisKey = xAxisType === 'career_year' ? 'career_year' : 'season_year';
+  const xAxisLabel = xAxisType === 'career_year' ? 'Career Year' : 'Season';
 
   return (
     <Card>
@@ -145,17 +152,18 @@ export function GraphDisplay({
             >
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis
-                dataKey="season_year"
+                dataKey={xAxisKey}
                 label={{
-                  value: "Season",
+                  value: xAxisLabel,
                   position: "insideBottom",
                   offset: -5,
                 }}
                 className="text-sm"
+                tickFormatter={(value) => xAxisType === 'career_year' ? `Y${value}` : value}
               />
               <YAxis
                 label={{
-                  value: STAT_LABELS[aggregation][metric],
+                  value: STAT_LABELS[aggregation ? aggregation : "per_game"][metric],
                   angle: -90,
                   position: "insideLeft",
                 }}
